@@ -1,0 +1,9 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://dn26n18gtuhyd"]
+
+[ext_resource type="FontFile" uid="uid://bv1lpq7ulra0f" path="res://assets/fonts/kenney/Kenney Mini Square.ttf" id="1_njk15"]
+
+[resource]
+default_font = ExtResource("1_njk15")
+default_font_size = 24
+Label/colors/font_shadow_color = Color(0, 0, 0, 1)
+RichTextLabel/colors/font_shadow_color = Color(0, 0, 0, 1)

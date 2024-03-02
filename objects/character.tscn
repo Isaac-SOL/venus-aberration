@@ -1,0 +1,78 @@
+[gd_scene load_steps=10 format=3 uid="uid://crxubcsmyb2mt"]
+
+[ext_resource type="Texture2D" uid="uid://brj780utw13on" path="res://assets/sprites/kenney/ship_0023.png" id="1_dyifn"]
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_lfxkg"]
+[ext_resource type="AudioStream" uid="uid://c7ts4rxxvcoum" path="res://assets/audio/446120__justinvoke__engine-loop-4.ogg" id="3_m406k"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5cqbh"]
+radius = 16.0
+height = 46.0
+
+[sub_resource type="Gradient" id="Gradient_mlxpc"]
+offsets = PackedFloat32Array(0, 0.793991, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ylyty"]
+gradient = SubResource("Gradient_mlxpc")
+
+[sub_resource type="Curve" id="Curve_jrjes"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.503788, 0.863158), -0.438781, -0.438781, 0, 0, Vector2(0.829545, 0.652632), -0.826174, -0.826174, 0, 0, Vector2(1, 0), -4.93039, 0.0, 0, 0]
+point_count = 4
+
+[sub_resource type="CurveTexture" id="CurveTexture_x1sp4"]
+curve = SubResource("Curve_jrjes")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dkq2r"]
+particle_flag_disable_z = true
+direction = Vector3(0, 1, 0)
+spread = 15.0
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+angular_velocity_min = -40.0
+angular_velocity_max = 40.0
+orbit_velocity_min = 0.0
+orbit_velocity_max = 0.0
+linear_accel_min = -8.0
+linear_accel_max = -3.0
+scale_min = 5.0
+scale_max = 10.0
+scale_curve = SubResource("CurveTexture_x1sp4")
+color = Color(0.392157, 0.392157, 0.392157, 0.588235)
+color_ramp = SubResource("GradientTexture1D_ylyty")
+hue_variation_min = -0.01
+hue_variation_max = 0.01
+
+[node name="MainCharacter" type="Area2D"]
+texture_filter = 1
+script = ExtResource("1_lfxkg")
+acceleration = 100.0
+rot_acceleration = 5.0
+friction = 1.5
+rot_friction = 2.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+z_index = 10
+scale = Vector2(2, 2)
+texture = ExtResource("1_dyifn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 1)
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_5cqbh")
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+unique_name_in_owner = true
+emitting = false
+amount = 20
+process_material = SubResource("ParticleProcessMaterial_dkq2r")
+lifetime = 10.0
+randomness = 0.3
+
+[node name="EngineAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("3_m406k")
+volume_db = -15.0
+pitch_scale = 0.01
+autoplay = true
+bus = &"World"

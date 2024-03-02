@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://d0chndtusx0a4"]
+
+[ext_resource type="Script" path="res://scripts/deposit.gd" id="1_h8m0d"]
+[ext_resource type="Texture2D" uid="uid://c0ah8ptn6oy16" path="res://icon.svg" id="1_tioea"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_gdhmj"]
+radius = 30.0
+
+[node name="Deposit" type="Area2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_h8m0d")
+scan_color = Color(0, 0.87451, 0, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_tioea")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_gdhmj")

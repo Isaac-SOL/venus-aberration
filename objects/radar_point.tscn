@@ -1,0 +1,24 @@
+[gd_scene load_steps=5 format=3 uid="uid://d0slcoxfu6yre"]
+
+[ext_resource type="Script" path="res://scripts/radar_point.gd" id="1_lecjb"]
+
+[sub_resource type="Gradient" id="Gradient_srypu"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gglpj"]
+gradient = SubResource("Gradient_srypu")
+width = 16
+
+[sub_resource type="Gradient" id="Gradient_fgca4"]
+offsets = PackedFloat32Array(0, 0.692308, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.427451, 1, 1, 1, 0)
+
+[node name="RadarPoint" type="Sprite2D"]
+self_modulate = Color(0.0901961, 1, 0.0941176, 1)
+position = Vector2(136, 647)
+rotation = 1.5708
+scale = Vector2(1, 16)
+texture = SubResource("GradientTexture1D_gglpj")
+script = ExtResource("1_lecjb")
+color_over_lifetime = SubResource("Gradient_fgca4")

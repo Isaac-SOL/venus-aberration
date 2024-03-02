@@ -1,0 +1,298 @@
+[gd_scene load_steps=31 format=3 uid="uid://pudfht3ulxcw"]
+
+[ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
+[ext_resource type="PackedScene" uid="uid://b7fewj57p7iav" path="res://objects/sampling_drone.tscn" id="2_gjms3"]
+[ext_resource type="PackedScene" uid="uid://de1r5lot8apoj" path="res://objects/radar.tscn" id="2_p4ckd"]
+[ext_resource type="Script" path="res://scripts/screenshake_camera.gd" id="2_u5apd"]
+[ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="3_btj6u"]
+[ext_resource type="PackedScene" uid="uid://bujdllpt40tyt" path="res://objects/extraction_drone.tscn" id="3_sdcrf"]
+[ext_resource type="PackedScene" uid="uid://mybibyf5jv4v" path="res://objects/status_label.tscn" id="4_cyim7"]
+[ext_resource type="PackedScene" uid="uid://b0q64717o78vr" path="res://objects/radar_ui.tscn" id="6_23oj3"]
+[ext_resource type="Shader" uid="uid://d3ee5lmk6vklk" path="res://shaders/cloud_shader.tres" id="6_aipgl"]
+[ext_resource type="Shader" uid="uid://cgj41v1cki3pc" path="res://shaders/cloud_shader_2.tres" id="10_cx3xn"]
+[ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="12_dwlxs"]
+[ext_resource type="Shader" uid="uid://hk7eofwijlb2" path="res://shaders/crt_shader.tres" id="13_s3xhu"]
+[ext_resource type="AudioStream" uid="uid://1b36p3hmi7oo" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-2017-11-10t22_30_14z_14575-khz.wav.ogg" id="14_lximi"]
+
+[sub_resource type="Gradient" id="Gradient_2xegu"]
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_86gtd"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ukv4t"]
+seamless = true
+color_ramp = SubResource("Gradient_2xegu")
+noise = SubResource("FastNoiseLite_86gtd")
+
+[sub_resource type="Gradient" id="Gradient_kpgoq"]
+colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1yht1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7u4hm"]
+width = 256
+height = 256
+seamless = true
+color_ramp = SubResource("Gradient_kpgoq")
+noise = SubResource("FastNoiseLite_1yht1")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ko13q"]
+shader = ExtResource("6_aipgl")
+shader_parameter/WorldPos = null
+shader_parameter/Clouds1 = SubResource("NoiseTexture2D_ukv4t")
+shader_parameter/Clouds2 = SubResource("NoiseTexture2D_7u4hm")
+
+[sub_resource type="GDScript" id="GDScript_21mes"]
+script/source = "extends ColorRect
+
+func _process(_delta):
+	material.set(\"WorldPos\", %MainCharacter.global_position)
+"
+
+[sub_resource type="Gradient" id="Gradient_mt7cm"]
+colors = PackedColorArray(0, 0, 0, 0.196078, 0.772549, 0.772549, 0.772549, 0.588235)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8e06e"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s44hc"]
+width = 256
+height = 256
+seamless = true
+color_ramp = SubResource("Gradient_mt7cm")
+noise = SubResource("FastNoiseLite_8e06e")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fpsru"]
+shader = ExtResource("10_cx3xn")
+shader_parameter/WorldPos = null
+shader_parameter/Clouds1 = SubResource("NoiseTexture2D_s44hc")
+
+[sub_resource type="Gradient" id="Gradient_0o3pv"]
+offsets = PackedFloat32Array(0, 0.20979, 0.486014, 0.797203, 1)
+colors = PackedColorArray(1, 1, 0, 1, 1, 0, 0.301961, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0sdut"]
+noise_type = 5
+frequency = 1.0
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sy2kd"]
+generate_mipmaps = false
+color_ramp = SubResource("Gradient_0o3pv")
+noise = SubResource("FastNoiseLite_0sdut")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ibbbg"]
+shader = ExtResource("13_s3xhu")
+shader_parameter/Noise = SubResource("NoiseTexture2D_sy2kd")
+
+[node name="Main" type="Node"]
+script = ExtResource("1_jec0e")
+sampling_drone = ExtResource("2_gjms3")
+extraction_drone = ExtResource("3_sdcrf")
+status_label = ExtResource("4_cyim7")
+
+[node name="TrueGround" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="ColorRect" type="ColorRect" parent="TrueGround"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.4, 0.235294, 0.0196078, 1)
+
+[node name="Ground" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+follow_viewport_enabled = true
+
+[node name="Deposit" parent="Ground" instance=ExtResource("3_btj6u")]
+position = Vector2(426, 334)
+
+[node name="Deposit2" parent="Ground" instance=ExtResource("3_btj6u")]
+position = Vector2(546, 636)
+
+[node name="Deposit3" parent="Ground" instance=ExtResource("3_btj6u")]
+position = Vector2(446, 601)
+
+[node name="Deposit4" parent="Ground" instance=ExtResource("3_btj6u")]
+position = Vector2(824, 261)
+
+[node name="CloudBarrier" type="CanvasLayer" parent="."]
+
+[node name="ColorRect" type="ColorRect" parent="CloudBarrier"]
+material = SubResource("ShaderMaterial_ko13q")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_21mes")
+
+[node name="Above" type="CanvasLayer" parent="."]
+layer = 5
+follow_viewport_enabled = true
+
+[node name="ScreenShakeCamera" type="Camera2D" parent="Above" node_paths=PackedStringArray("target_node")]
+position = Vector2(642, 404)
+position_smoothing_enabled = true
+position_smoothing_speed = 3.0
+script = ExtResource("2_u5apd")
+target_node = NodePath("../MainCharacter")
+
+[node name="MainCharacter" parent="Above" instance=ExtResource("1_fk25x")]
+unique_name_in_owner = true
+position = Vector2(642, 404)
+collision_mask = 3
+
+[node name="AudioListener2D" type="AudioListener2D" parent="Above/MainCharacter"]
+current = true
+
+[node name="ShapeCast2D" parent="Above" node_paths=PackedStringArray("target") instance=ExtResource("2_p4ckd")]
+position = Vector2(1, 0)
+target = NodePath("../MainCharacter")
+
+[node name="CloudBarrier2" type="CanvasLayer" parent="."]
+layer = 6
+
+[node name="ColorRect" type="ColorRect" parent="CloudBarrier2"]
+material = SubResource("ShaderMaterial_fpsru")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="RadarUI" parent="." node_paths=PackedStringArray("world_radar") instance=ExtResource("6_23oj3")]
+layer = 15
+world_radar = NodePath("../Above/ShapeCast2D")
+
+[node name="MainUI" type="CanvasLayer" parent="."]
+layer = 16
+
+[node name="ActionContainer" type="MarginContainer" parent="MainUI"]
+texture_filter = 2
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -512.0
+offset_top = -256.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(512, 256)
+theme = ExtResource("12_dwlxs")
+
+[node name="ActionLabels" type="VBoxContainer" parent="MainUI/ActionContainer"]
+layout_mode = 2
+
+[node name="LabelSampling" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=green]E - Send sampling drone {20 Bi}"
+fit_content = true
+
+[node name="LabelExtracting" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=green]R - Send extraction drone {100 Fe}"
+fit_content = true
+
+[node name="LabelGrab" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=green]T - Grab extraction drone"
+fit_content = true
+
+[node name="StatusContainer" type="MarginContainer" parent="MainUI"]
+texture_filter = 2
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -992.0
+offset_top = -265.0
+offset_right = -536.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(512, 256)
+theme = ExtResource("12_dwlxs")
+
+[node name="StatusLabels" type="VBoxContainer" parent="MainUI/StatusContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
+
+[node name="MoneyContainer" type="MarginContainer" parent="MainUI"]
+modulate = Color(0, 1, 0, 1)
+texture_filter = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -196.0
+offset_bottom = 90.0
+grow_horizontal = 0
+size_flags_horizontal = 8
+size_flags_vertical = 0
+theme = ExtResource("12_dwlxs")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainUI/MoneyContainer"]
+layout_mode = 2
+
+[node name="LabelIron" type="Label" parent="MainUI/MoneyContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "200 Fe"
+
+[node name="LabelBismuthine" type="Label" parent="MainUI/MoneyContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "200 Bi"
+
+[node name="SampleContainer" type="MarginContainer" parent="MainUI"]
+texture_filter = 2
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -433.0
+offset_top = -227.0
+offset_right = -14.0
+offset_bottom = 74.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("12_dwlxs")
+
+[node name="LabelSampleResults" type="RichTextLabel" parent="MainUI/SampleContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+tab_size = 8
+
+[node name="CRT" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="ColorRect" type="ColorRect" parent="CRT"]
+material = SubResource("ShaderMaterial_ibbbg")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BGLoop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_lximi")
+volume_db = -6.0
+autoplay = true
+bus = &"World"

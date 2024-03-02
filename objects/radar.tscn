@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://de1r5lot8apoj"]
+
+[ext_resource type="Script" path="res://scripts/radar.gd" id="1_j2llf"]
+
+[sub_resource type="ConvexPolygonShape2D" id="ConvexPolygonShape2D_e30a0"]
+points = PackedVector2Array(0, 0, -50, 720, 50, 720)
+
+[sub_resource type="Gradient" id="Gradient_jwrh2"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_egj10"]
+gradient = SubResource("Gradient_jwrh2")
+width = 720
+
+[node name="ShapeCast2D" type="ShapeCast2D"]
+shape = SubResource("ConvexPolygonShape2D_e30a0")
+target_position = Vector2(0, 0)
+collision_mask = 2
+collide_with_areas = true
+collide_with_bodies = false
+script = ExtResource("1_j2llf")
+
+[node name="DebugSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, 360)
+rotation = 1.5708
+scale = Vector2(1, 10)
+texture = SubResource("GradientTexture1D_egj10")
