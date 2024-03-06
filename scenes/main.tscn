@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=48 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -8,12 +8,27 @@
 [ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="3_btj6u"]
 [ext_resource type="PackedScene" uid="uid://bujdllpt40tyt" path="res://objects/extraction_drone.tscn" id="3_sdcrf"]
 [ext_resource type="PackedScene" uid="uid://mybibyf5jv4v" path="res://objects/status_label.tscn" id="4_cyim7"]
+[ext_resource type="Script" path="res://scripts/upgrade_system.gd" id="6_2a65r"]
 [ext_resource type="PackedScene" uid="uid://b0q64717o78vr" path="res://objects/radar_ui.tscn" id="6_23oj3"]
 [ext_resource type="Shader" uid="uid://d3ee5lmk6vklk" path="res://shaders/cloud_shader.tres" id="6_aipgl"]
+[ext_resource type="AudioStream" uid="uid://g6s7okmplv6n" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180.ogg" id="8_7cydg"]
+[ext_resource type="AudioStream" uid="uid://5mr6tmlnmm4a" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180_short.ogg" id="8_roxjh"]
 [ext_resource type="Shader" uid="uid://cgj41v1cki3pc" path="res://shaders/cloud_shader_2.tres" id="10_cx3xn"]
+[ext_resource type="AudioStream" uid="uid://cb74puv8mlwu8" path="res://assets/audio/kenney/back_001_edited.ogg" id="10_ju6lk"]
+[ext_resource type="AudioStream" uid="uid://dbwtwnurootbd" path="res://assets/audio/kenney/confirmation_001_edited.ogg" id="11_6ds5o"]
 [ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="12_dwlxs"]
+[ext_resource type="Texture2D" uid="uid://cfl43v1rytq3x" path="res://assets/sprites/vignette.png" id="13_o4syf"]
 [ext_resource type="Shader" uid="uid://hk7eofwijlb2" path="res://shaders/crt_shader.tres" id="13_s3xhu"]
-[ext_resource type="AudioStream" uid="uid://1b36p3hmi7oo" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-2017-11-10t22_30_14z_14575-khz.wav.ogg" id="14_lximi"]
+[ext_resource type="AudioStream" uid="uid://boactc2pwxp56" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-edited.ogg" id="14_syjp0"]
+[ext_resource type="PackedScene" uid="uid://bfta0kremxg1e" path="res://objects/deposit_bis_low.tscn" id="15_6ssbb"]
+[ext_resource type="Script" path="res://scripts/scrap_generator.gd" id="16_icr88"]
+[ext_resource type="PackedScene" uid="uid://ditvyn8dehx" path="res://objects/deposit_nothing.tscn" id="16_k76fm"]
+[ext_resource type="PackedScene" uid="uid://c8dw6h147t7hg" path="res://objects/scrap.tscn" id="17_3p33g"]
+[ext_resource type="PackedScene" uid="uid://bksld1p4dpxtm" path="res://objects/scrap_scan.tscn" id="18_8uqgm"]
+[ext_resource type="PackedScene" uid="uid://c00dwyidl3mp2" path="res://objects/deposit_iron_high.tscn" id="18_w74od"]
+[ext_resource type="PackedScene" uid="uid://c6po6vp8c1s8g" path="res://objects/deposit_iron_low.tscn" id="19_m5ew7"]
+[ext_resource type="PackedScene" uid="uid://7jq1akxvhqng" path="res://objects/deposit_high.tscn" id="20_58hj8"]
+[ext_resource type="PackedScene" uid="uid://c2l465fyjwl12" path="res://objects/deposit_bis_high.tscn" id="21_ftojt"]
 
 [sub_resource type="Gradient" id="Gradient_2xegu"]
 colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
@@ -50,6 +65,22 @@ func _process(_delta):
 	material.set(\"WorldPos\", %MainCharacter.global_position)
 "
 
+[sub_resource type="Curve2D" id="Curve2D_iotw0"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -274, -382, 0, 0, 0, 0, 683, -632, 0, 0, 0, 0, 1688, -206, 0, 0, 0, 0, 1677, 944, 0, 0, 0, 0, 550, 1334, 0, 0, 0, 0, -315, 895, 0, 0, 0, 0, -274, -382)
+}
+point_count = 7
+
+[sub_resource type="GDScript" id="GDScript_7tx5j"]
+script/source = "extends Path2D
+
+@onready var offset: Vector2 = %MainCharacter.global_position
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta):
+	global_position = %MainCharacter.global_position - offset
+"
+
 [sub_resource type="Gradient" id="Gradient_mt7cm"]
 colors = PackedColorArray(0, 0, 0, 0.196078, 0.772549, 0.772549, 0.772549, 0.588235)
 
@@ -76,6 +107,8 @@ noise_type = 5
 frequency = 1.0
 
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sy2kd"]
+width = 128
+height = 128
 generate_mipmaps = false
 color_ramp = SubResource("Gradient_0o3pv")
 noise = SubResource("FastNoiseLite_0sdut")
@@ -86,9 +119,51 @@ shader_parameter/Noise = SubResource("NoiseTexture2D_sy2kd")
 
 [node name="Main" type="Node"]
 script = ExtResource("1_jec0e")
+iron = 0
+bismuthine = 1500
 sampling_drone = ExtResource("2_gjms3")
 extraction_drone = ExtResource("3_sdcrf")
+extraction_drone_price = 50
 status_label = ExtResource("4_cyim7")
+scrap_scan = ExtResource("18_8uqgm")
+
+[node name="UpgradeSystem" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_2a65r")
+
+[node name="BGLoop" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_syjp0")
+volume_db = -6.0
+autoplay = true
+bus = &"World"
+
+[node name="ScrapAudio" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_roxjh")
+volume_db = -9.0
+bus = &"World"
+
+[node name="UpgradeAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("8_7cydg")
+volume_db = -5.0
+bus = &"World"
+
+[node name="UIAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("10_ju6lk")
+volume_db = -9.0
+bus = &"UI"
+
+[node name="SpawnAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("11_6ds5o")
+volume_db = -6.0
+bus = &"UI"
+
+[node name="TimerBismuthine" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.65
+autostart = true
 
 [node name="TrueGround" type="CanvasLayer" parent="."]
 layer = 0
@@ -105,17 +180,98 @@ color = Color(0.4, 0.235294, 0.0196078, 1)
 unique_name_in_owner = true
 follow_viewport_enabled = true
 
+[node name="DepositBisLow" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(428, 308)
+
+[node name="DepositBisLow2" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(1016, 824)
+
+[node name="DepositNothing" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(765, -57)
+
+[node name="DepositNothing2" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(-96, 532)
+
 [node name="Deposit" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(426, 334)
+position = Vector2(569, 1276)
 
 [node name="Deposit2" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(546, 636)
+position = Vector2(562, 1354)
 
-[node name="Deposit3" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(446, 601)
+[node name="DepositNothing3" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(278, 975)
 
-[node name="Deposit4" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(824, 261)
+[node name="DepositNothing4" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(2211, 1080)
+
+[node name="DepositNothing5" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(272, 2006)
+
+[node name="DepositNothing6" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(4362, 2966)
+
+[node name="DepositNothing7" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(4473, 2873)
+
+[node name="DepositNothing8" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(4347, 2847)
+
+[node name="DepositIronHigh" parent="Ground" instance=ExtResource("18_w74od")]
+position = Vector2(2441, 1706)
+
+[node name="DepositIronLow" parent="Ground" instance=ExtResource("19_m5ew7")]
+position = Vector2(2223, 550)
+
+[node name="DepositNothing9" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(2576, 43)
+
+[node name="DepositNothing10" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(1923, -331)
+
+[node name="DepositHigh" parent="Ground" instance=ExtResource("20_58hj8")]
+position = Vector2(708, 3463)
+
+[node name="DepositNothing11" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(331, 2811)
+
+[node name="DepositNothing12" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(1653, 3424)
+
+[node name="DepositBisLow3" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(2446, 3494)
+
+[node name="DepositBisLow4" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(2252, 3722)
+
+[node name="DepositBisHigh" parent="Ground" instance=ExtResource("21_ftojt")]
+position = Vector2(2459, 3745)
+
+[node name="DepositNothing13" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(3209, 2976)
+
+[node name="DepositNothing14" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(3940, 1388)
+
+[node name="DepositBisHigh2" parent="Ground" instance=ExtResource("21_ftojt")]
+position = Vector2(1320, 2134)
+
+[node name="DepositBisLow5" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(1332, 1997)
+
+[node name="DepositBisLow6" parent="Ground" instance=ExtResource("15_6ssbb")]
+position = Vector2(1425, 2080)
+
+[node name="DepositIronHigh2" parent="Ground" instance=ExtResource("18_w74od")]
+position = Vector2(1196, 4076)
+
+[node name="DepositIronLow2" parent="Ground" instance=ExtResource("19_m5ew7")]
+position = Vector2(3933, 426)
+
+[node name="DepositIronLow3" parent="Ground" instance=ExtResource("19_m5ew7")]
+position = Vector2(4065, 583)
+
+[node name="DepositNothing15" parent="Ground" instance=ExtResource("16_k76fm")]
+position = Vector2(4261, -736)
 
 [node name="CloudBarrier" type="CanvasLayer" parent="."]
 
@@ -129,6 +285,7 @@ grow_vertical = 2
 script = SubResource("GDScript_21mes")
 
 [node name="Above" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 layer = 5
 follow_viewport_enabled = true
 
@@ -139,17 +296,34 @@ position_smoothing_speed = 3.0
 script = ExtResource("2_u5apd")
 target_node = NodePath("../MainCharacter")
 
-[node name="MainCharacter" parent="Above" instance=ExtResource("1_fk25x")]
+[node name="MainCharacter" parent="Above" groups=["MainCharacter"] instance=ExtResource("1_fk25x")]
 unique_name_in_owner = true
+z_index = 10
 position = Vector2(642, 404)
 collision_mask = 3
 
-[node name="AudioListener2D" type="AudioListener2D" parent="Above/MainCharacter"]
-current = true
-
-[node name="ShapeCast2D" parent="Above" node_paths=PackedStringArray("target") instance=ExtResource("2_p4ckd")]
+[node name="Radar" parent="Above" node_paths=PackedStringArray("target") instance=ExtResource("2_p4ckd")]
+unique_name_in_owner = true
 position = Vector2(1, 0)
 target = NodePath("../MainCharacter")
+rot_speed = 1.047
+
+[node name="ScrapGeneratorPath" type="Path2D" parent="Above"]
+curve = SubResource("Curve2D_iotw0")
+script = SubResource("GDScript_7tx5j")
+
+[node name="ScrapGenerator" type="PathFollow2D" parent="Above/ScrapGeneratorPath"]
+position = Vector2(-274, -382)
+rotation = -0.255523
+script = ExtResource("16_icr88")
+scrap = ExtResource("17_3p33g")
+scrap_scan = ExtResource("18_8uqgm")
+
+[node name="GeneratorTimer" type="Timer" parent="Above/ScrapGeneratorPath/ScrapGenerator"]
+process_callback = 0
+wait_time = 15.0
+one_shot = true
+autostart = true
 
 [node name="CloudBarrier2" type="CanvasLayer" parent="."]
 layer = 6
@@ -162,11 +336,18 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="WorldUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 14
+follow_viewport_enabled = true
+
 [node name="RadarUI" parent="." node_paths=PackedStringArray("world_radar") instance=ExtResource("6_23oj3")]
+unique_name_in_owner = true
 layer = 15
-world_radar = NodePath("../Above/ShapeCast2D")
+world_radar = NodePath("../Above/Radar")
 
 [node name="MainUI" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
 layer = 16
 
 [node name="ActionContainer" type="MarginContainer" parent="MainUI"]
@@ -191,7 +372,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=green]E - Send sampling drone {20 Bi}"
+text = "[color=lightgreen]E[color=green] - Send sampling drone [color=lightgreen]{20 Bi}"
 fit_content = true
 
 [node name="LabelExtracting" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
@@ -199,7 +380,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=green]R - Send extraction drone {100 Fe}"
+text = "[color=lightgreen]R[color=green] - Send extraction drone [color=lightgreen]{50 Fe}"
 fit_content = true
 
 [node name="LabelGrab" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
@@ -207,7 +388,15 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=green]T - Grab extraction drone"
+text = "[color=lightgreen]F[color=green] - Collect extraction drone"
+fit_content = true
+
+[node name="LabelMenu" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=lightgreen][0][color=green] - Open menu & upgrades"
 fit_content = true
 
 [node name="StatusContainer" type="MarginContainer" parent="MainUI"]
@@ -231,7 +420,6 @@ layout_mode = 2
 alignment = 2
 
 [node name="MoneyContainer" type="MarginContainer" parent="MainUI"]
-modulate = Color(0, 1, 0, 1)
 texture_filter = 2
 anchors_preset = 1
 anchor_left = 1.0
@@ -246,17 +434,21 @@ theme = ExtResource("12_dwlxs")
 [node name="VBoxContainer" type="VBoxContainer" parent="MainUI/MoneyContainer"]
 layout_mode = 2
 
-[node name="LabelIron" type="Label" parent="MainUI/MoneyContainer/VBoxContainer"]
+[node name="LabelIron" type="RichTextLabel" parent="MainUI/MoneyContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "200 Fe"
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[color=green]200 [color=lightgreen]Fe"
+fit_content = true
 
-[node name="LabelBismuthine" type="Label" parent="MainUI/MoneyContainer/VBoxContainer"]
+[node name="LabelBismuthine" type="RichTextLabel" parent="MainUI/MoneyContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "200 Bi"
+theme_override_font_sizes/normal_font_size = 32
+bbcode_enabled = true
+text = "[color=green]2000 [color=lightgreen]Bi"
+fit_content = true
 
 [node name="SampleContainer" type="MarginContainer" parent="MainUI"]
 texture_filter = 2
@@ -280,8 +472,105 @@ theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 tab_size = 8
 
+[node name="UpgradeContainer" type="MarginContainer" parent="MainUI"]
+unique_name_in_owner = true
+visible = false
+offset_left = 119.0
+offset_top = 27.0
+offset_right = 804.0
+offset_bottom = 448.0
+theme = ExtResource("12_dwlxs")
+
+[node name="UpgradeFlowContainer" type="FlowContainer" parent="MainUI/UpgradeContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="UpgradeOption1" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=cyan][1] upgrade speed
+[color=green]+ 50% speed
+[color=pink]- 100 Fe"
+fit_content = true
+
+[node name="UpgradeOption2" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=cyan][2] upgrade
+radar speed
+[color=green]+ 100% speed
+[color=pink]- 100 Fe"
+fit_content = true
+
+[node name="UpgradeOption3" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=cyan][3] upgrade
+radar range
+[color=green]+ 50% range
+[color=pink]- 100 Fe"
+fit_content = true
+
+[node name="UpgradeOption4" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=cyan][4] upgrade
+engine eff.
+[color=green]- 50% bi/sec
+[color=pink]- 100 Fe"
+fit_content = true
+
+[node name="UpgradeOption5" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=lightgreen][5] [color=green]upgrade
+extract. speed
++ 100% speed
+[color=lightgreen]{500 Fe}"
+fit_content = true
+
+[node name="UpgradeOption6" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="UpgradeOption7" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="UpgradeOption8" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+
+[node name="UpgradeOption9" type="RichTextLabel" parent="MainUI/UpgradeContainer/UpgradeFlowContainer"]
+custom_minimum_size = Vector2(222, 133)
+layout_mode = 2
+bbcode_enabled = true
+text = "[center][color=lightgreen][9] [color=green]toggle
+radar audio
+feedback"
+fit_content = true
+
 [node name="CRT" type="CanvasLayer" parent="."]
 layer = 20
+
+[node name="TextureRect" type="TextureRect" parent="CRT"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("13_o4syf")
 
 [node name="ColorRect" type="ColorRect" parent="CRT"]
 material = SubResource("ShaderMaterial_ibbbg")
@@ -291,8 +580,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BGLoop" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("14_lximi")
-volume_db = -6.0
-autoplay = true
-bus = &"World"
+[connection signal="timeout" from="TimerBismuthine" to="." method="_on_timer_bismuthine_timeout"]
+[connection signal="collected_scrap" from="Above/MainCharacter" to="." method="_on_main_character_collected_scrap"]
+[connection signal="collected_scrap" from="Above/MainCharacter" to="ScrapAudio" method="play" unbinds=1]
+[connection signal="timeout" from="Above/ScrapGeneratorPath/ScrapGenerator/GeneratorTimer" to="Above/ScrapGeneratorPath/ScrapGenerator" method="_on_generator_timer_timeout"]

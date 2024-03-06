@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=4 format=3 uid="uid://dsdwsweihwdvt"]
+[gd_resource type="AudioBusLayout" load_steps=5 format=3 uid="uid://dsdwsweihwdvt"]
 
 [sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_4d77k"]
 resource_name = "LowPassFilter"
@@ -14,6 +14,11 @@ damping = 0.3
 resource_name = "Reverb"
 room_size = 0.4
 wet = 0.1
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_uyee2"]
+resource_name = "Reverb"
+room_size = 0.1
+wet = 0.03
 
 [resource]
 bus/1/name = &"Radar"
@@ -34,3 +39,11 @@ bus/2/volume_db = -16.4004
 bus/2/send = &"Master"
 bus/2/effect/0/effect = SubResource("AudioEffectReverb_7nie5")
 bus/2/effect/0/enabled = true
+bus/3/name = &"UI"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = &"Master"
+bus/3/effect/0/effect = SubResource("AudioEffectReverb_uyee2")
+bus/3/effect/0/enabled = true

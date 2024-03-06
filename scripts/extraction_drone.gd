@@ -5,7 +5,7 @@ signal finished_extracting
 signal grabbed
 
 @export var speed: float = 10
-@export var max_space: int = 300
+@export var max_space: int = 400
 
 var target: Vector2
 var moving: bool = false
@@ -13,6 +13,7 @@ var id: int
 var contains: Dictionary = {}
 const mined_metals: Array[String] = ["iron", "bismuthine"]
 var ready_for_grab: bool = false
+var extraction_factor: float = 1
 
 func _process(delta):
 	super._process(delta)
@@ -58,11 +59,21 @@ func add_metal(metal: String):
 
 func extract_deposit(deposit: Deposit):
 	while deposit.contains(mined_metals) && total_amount() < max_space:
-		await seconds(0.2, 0.5)
+		await seconds(0.1, 0.4 * (1 / extraction_factor))
 		var metal: String = deposit.extract(mined_metals)
+		print(metal, deposit.get_total_amount())
 		if !metal.is_empty():
 			add_metal(metal)
+	await seconds(1)
 	finished_extracting.emit()
+
+func set_drilling_audio(do_set: bool):
+	%DrillingAudio.volume_db = -60 if do_set else 6
+	%DrillingAudio.play()
+	var tween = get_tree().create_tween()
+	tween.tween_property(%DrillingAudio, "volume_db", 6 if do_set else -60, 1)
+	if not do_set:
+		tween.tween_callback(%DrillingAudio.stop)
 
 func grab():
 	grabbed.emit()

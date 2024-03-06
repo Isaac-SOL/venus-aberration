@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=3 uid="uid://bksld1p4dpxtm"]
+
+[ext_resource type="Texture2D" uid="uid://4jf2xycpq3v7" path="res://assets/sprites/scrap_scan.png" id="1_b30an"]
+[ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="2_ersmh"]
+
+[sub_resource type="GDScript" id="GDScript_2x1ad"]
+script/source = "extends Sprite2D
+
+@export var follow_node: Node2D
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(_delta):
+	if is_instance_valid(follow_node):
+		global_position = follow_node.global_position
+		var dist: float = (get_tree().get_nodes_in_group(\"MainCharacter\")[0].global_position - global_position).length()
+		var alpha: float = 1 - sigmoid(dist / 10.0 - 10)
+		modulate.a = alpha
+	else:
+		queue_free()
+
+func sigmoid(x: float) -> float:
+	return 1.0 / (1.0 + exp(-x))
+
+func set_value(value: int):
+	$Label.text = str(value) + \" Fe\"
+
+func set_text(text: String):
+	$Label.text = text
+"
+
+[node name="ScrapScan" type="Sprite2D"]
+scale = Vector2(2, 2)
+texture = ExtResource("1_b30an")
+script = SubResource("GDScript_2x1ad")
+
+[node name="Label" type="Label" parent="."]
+modulate = Color(0, 0.607843, 0, 1)
+offset_left = 33.0
+offset_top = -35.0
+offset_right = 156.0
+offset_bottom = 28.0
+theme = ExtResource("2_ersmh")
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.501961)
+theme_override_font_sizes/font_size = 18
+text = "20 Fe"
+autowrap_mode = 2

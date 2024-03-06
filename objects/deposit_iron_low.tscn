@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://c6po6vp8c1s8g"]
+
+[ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="1_mky1l"]
+
+[node name="DepositIronLow" instance=ExtResource("1_mky1l")]
+modulate = Color(0.717647, 0.709804, 0.262745, 1)
+composition_type = 4

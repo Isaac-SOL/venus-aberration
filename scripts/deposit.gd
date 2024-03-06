@@ -60,47 +60,48 @@ func composition_generator_table():
 	if composition_type == CompositionType.NOTHING:
 		composition = {
 			galena = randi_range(80, 250),
+			bismuthine = randi_range(0, 50),
 			other = randi_range(100, 200)
 		}
 	elif composition_type == CompositionType.BALANCED_LOW:
 		composition = {
 			galena = randi_range(80, 250),
 			iron = randi_range(50, 120),
-			bismuthine = randi_range(10, 50),
+			bismuthine = randi_range(30, 150),
 			other = randi_range(100, 200)
 		}
 	elif composition_type == CompositionType.BALANCED_HIGH:
 		composition = {
 			galena = randi_range(65, 210),
 			iron = randi_range(90, 200),
-			bismuthine = randi_range(30, 80),
+			bismuthine = randi_range(90, 200),
 			other = randi_range(70, 200)
 		}
 	elif composition_type == CompositionType.IRON_LOW:
 		composition = {
 			galena = randi_range(80, 250),
 			iron = randi_range(90, 180),
-			bismuthine = randi_range(5, 20),
+			bismuthine = randi_range(20, 40),
 			other = randi_range(100, 200)
 		}
 	elif composition_type == CompositionType.IRON_HIGH:
 		composition = {
 			galena = randi_range(80, 150),
 			iron = randi_range(120, 250),
-			bismuthine = randi_range(5, 25),
+			bismuthine = randi_range(10, 50),
 			other = randi_range(50, 120)
 		}
 	elif composition_type == CompositionType.BIS_LOW:
 		composition = {
 			galena = randi_range(80, 250),
 			iron = randi_range(25, 90),
-			bismuthine = randi_range(20, 70),
+			bismuthine = randi_range(100, 150),
 			other = randi_range(100, 200)
 		}
 	elif composition_type == CompositionType.BIS_HIGH:
 		composition = {
 			galena = randi_range(65, 170),
 			iron = randi_range(25, 105),
-			bismuthine = randi_range(40, 110),
+			bismuthine = randi_range(100, 275),
 			other = randi_range(70, 100)
 		}

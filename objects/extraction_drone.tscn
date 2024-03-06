@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://bujdllpt40tyt"]
+[gd_scene load_steps=11 format=3 uid="uid://bujdllpt40tyt"]
 
 [ext_resource type="Script" path="res://scripts/extraction_drone.gd" id="1_d64h7"]
 [ext_resource type="Texture2D" uid="uid://cqhtlqknar3dy" path="res://assets/sprites/lamp.png" id="2_0141m"]
 [ext_resource type="AudioStream" uid="uid://yiiwnv67cade" path="res://assets/audio/458636__boxingclever__machine-static.wav.ogg" id="3_q0nru"]
+[ext_resource type="AudioStream" uid="uid://qt1ok6yeyh14" path="res://assets/audio/34050__tweeterdj__front-end-loader-breaking-concrete-jackhammer.ogg" id="4_emjop"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_52584"]
 radius = 70.0
@@ -47,6 +48,23 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [-60.0, 3.0]
+}
+
+[sub_resource type="Animation" id="Animation_sl0bo"]
+resource_name = "blink"
+length = 0.6
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(-2, -2, 1),
+"update": 0,
+"values": [Vector2(4, 4), Vector2(1e-05, 1e-05), Vector2(4, 4)]
 }
 
 [sub_resource type="Animation" id="Animation_fptxe"]
@@ -102,23 +120,6 @@ tracks/3/keys = {
 "values": [3.0, -60.0]
 }
 
-[sub_resource type="Animation" id="Animation_sl0bo"]
-resource_name = "blink"
-length = 0.6
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:scale")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6),
-"transitions": PackedFloat32Array(-2, -2, 1),
-"update": 0,
-"values": [Vector2(4, 4), Vector2(1e-05, 1e-05), Vector2(4, 4)]
-}
-
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_3xjgb"]
 _data = {
 "appear": SubResource("Animation_0vvfv"),
@@ -146,7 +147,7 @@ shape = SubResource("CircleShape2D_521ra")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 modulate = Color(1, 0, 0, 1)
-scale = Vector2(4, 4)
+scale = Vector2(1e-05, 1e-05)
 texture = ExtResource("2_0141m")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
@@ -158,8 +159,16 @@ libraries = {
 
 [node name="EngineAudio" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_q0nru")
-volume_db = 3.0
+volume_db = -60.0
+pitch_scale = 0.01
 autoplay = true
 max_distance = 640.0
+panning_strength = 2.0
+bus = &"World"
+
+[node name="DrillingAudio" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_emjop")
+max_distance = 1000.0
 panning_strength = 2.0
 bus = &"World"

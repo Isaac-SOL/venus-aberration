@@ -45,8 +45,9 @@ hue_variation_max = 0.01
 
 [node name="MainCharacter" type="Area2D"]
 texture_filter = 1
+collision_mask = 5
 script = ExtResource("1_lfxkg")
-acceleration = 100.0
+acceleration = 75.0
 rot_acceleration = 5.0
 friction = 1.5
 rot_friction = 2.0
@@ -76,3 +77,5 @@ volume_db = -15.0
 pitch_scale = 0.01
 autoplay = true
 bus = &"World"
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

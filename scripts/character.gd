@@ -1,5 +1,7 @@
 extends Area2D
 
+signal collected_scrap(value: int)
+
 @export var acceleration: float = 10
 @export var rot_acceleration: float = 10
 @export var friction: float = 1
@@ -37,3 +39,8 @@ func _process(delta):
 	
 	# Audio
 	%EngineAudio.pitch_scale = lerpf(0.01, 1, speed.length() / 100)
+
+func _on_area_entered(area):
+	if area is Scrap:
+		collected_scrap.emit(area.value)
+		area.queue_free()
