@@ -1,4 +1,4 @@
-extends Area2D
+class_name PlayerCharacter extends Area2D
 
 signal collected_scrap(value: int)
 

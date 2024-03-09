@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://dkyo4jwdmdhy2"]
+
+[ext_resource type="PackedScene" uid="uid://djsodpc5gmdhx" path="res://objects/structure_empty.tscn" id="1_10ldk"]
+[ext_resource type="Texture2D" uid="uid://c1ps1tt65calm" path="res://assets/sprites/structure_2.png" id="2_3bi26"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_iinnw"]
+size = Vector2(202, 206)
+
+[node name="StructureEmpty" instance=ExtResource("1_10ldk")]
+
+[node name="CollisionShape2D" parent="." index="0"]
+position = Vector2(5, 3)
+shape = SubResource("RectangleShape2D_iinnw")
+
+[node name="Background" parent="." index="1"]
+texture = ExtResource("2_3bi26")

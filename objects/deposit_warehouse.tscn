@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://co5adbxo1od4i"]
+
+[ext_resource type="PackedScene" uid="uid://dxr4fao1oomb0" path="res://objects/deposit_gold_high.tscn" id="1_4wscr"]
+
+[node name="DepositWarehouse" instance=ExtResource("1_4wscr")]
+composition_type = 10

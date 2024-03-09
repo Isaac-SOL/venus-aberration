@@ -1,0 +1,37 @@
+[gd_scene load_steps=4 format=3 uid="uid://dxrlu3cl7vlrm"]
+
+[ext_resource type="PackedScene" uid="uid://d25qym17xbur8" path="res://objects/structure_1.tscn" id="1_tab0n"]
+[ext_resource type="Texture2D" uid="uid://c1ps1tt65calm" path="res://assets/sprites/structure_2.png" id="2_yfwgt"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_01mdw"]
+size = Vector2(203, 208)
+
+[node name="Structure" instance=ExtResource("1_tab0n")]
+
+[node name="CollisionShape2D" parent="." index="0"]
+position = Vector2(5.5, 9)
+shape = SubResource("RectangleShape2D_01mdw")
+
+[node name="Background" parent="." index="1"]
+texture = ExtResource("2_yfwgt")
+
+[node name="Lamp0" parent="." index="2"]
+position = Vector2(-70, -78)
+
+[node name="Lamp1" parent="." index="3"]
+position = Vector2(89, -61)
+
+[node name="Lamp2" parent="." index="4"]
+position = Vector2(37, 4)
+
+[node name="Lamp3" parent="." index="5"]
+position = Vector2(87, 72)
+
+[node name="DepositWarehouse" parent="." index="7"]
+position = Vector2(12, 71)
+
+[node name="DepositWarehouse2" parent="." index="8"]
+position = Vector2(-32, -37)
+
+[node name="DepositWarehouse3" parent="." index="9"]
+position = Vector2(-52, 31)

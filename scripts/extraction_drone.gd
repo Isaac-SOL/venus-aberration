@@ -5,13 +5,12 @@ signal finished_extracting
 signal grabbed
 
 @export var speed: float = 10
-@export var max_space: int = 400
 
 var target: Vector2
 var moving: bool = false
 var id: int
 var contains: Dictionary = {}
-const mined_metals: Array[String] = ["iron", "bismuthine"]
+var mined_metals: Array[String] = ["iron", "bismuthine", "gold"]
 var ready_for_grab: bool = false
 var extraction_factor: float = 1
 
@@ -27,6 +26,12 @@ func _process(delta):
 func get_contents() -> Dictionary:
 	return contains
 
+func is_empty() -> bool:
+	return contains.is_empty()
+
+func set_extract_galena():
+	mined_metals.append("galena")
+
 func seconds(t: float, t2: float = -1):
 	if t2 > 0:
 		return get_tree().create_timer(randf_range(t, t2)).timeout
@@ -35,7 +40,7 @@ func seconds(t: float, t2: float = -1):
 func find_deposit() -> Deposit:
 	var distances: Dictionary = {}
 	for area in %Scanner.get_overlapping_areas():
-		if area is Deposit && area.contains_useful_metal():
+		if area is Deposit && area.contains(mined_metals):
 			distances[(area.global_position - global_position).length_squared()] = area
 	if not distances.is_empty():
 		return distances[distances.keys().min()]
@@ -58,13 +63,18 @@ func add_metal(metal: String):
 		contains[metal] = 1
 
 func extract_deposit(deposit: Deposit):
-	while deposit.contains(mined_metals) && total_amount() < max_space:
+	print("Starting extraction : ", str(deposit.get_composition()))
+	while deposit.contains(mined_metals):
 		await seconds(0.1, 0.4 * (1 / extraction_factor))
 		var metal: String = deposit.extract(mined_metals)
-		print(metal, deposit.get_total_amount())
+		if metal == "galena":
+			if randf() < 0.3:
+				metal = "iron"
+			else:
+				continue
 		if !metal.is_empty():
 			add_metal(metal)
-	await seconds(1)
+	await seconds(2)
 	finished_extracting.emit()
 
 func set_drilling_audio(do_set: bool):

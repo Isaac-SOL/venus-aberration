@@ -2,6 +2,7 @@ class_name Main extends Node
 
 @export var iron: int = 150
 @export var bismuthine: int = 200
+@export var gold: int = 0
 @export var sampling_drone: PackedScene
 @export var sampling_drone_price: int = 20
 @export var extraction_drone: PackedScene
@@ -20,6 +21,7 @@ var can_grab_extraction: bool = true
 var can_open_menu: bool = true
 var menu_open: bool = false
 var extraction_factor: float = 1
+var galena_extraction: bool = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -44,7 +46,7 @@ func _process(_delta):
 					%UpgradeSystem.perform_upgrade(i)
 					open_upgrade_menu(false)
 					%UpgradeAudio.play()
-				elif i == 8:
+				elif i == 8 and %RadarUI.is_active():
 					%RadarUI.toggle_audio()
 					%UIAudio.play()
 		if Input.is_action_just_pressed("debug_iron"):
@@ -78,6 +80,8 @@ func spawn_extraction_drone():
 		out_extractions[-1].global_position = %MainCharacter.global_position
 		out_extractions[-1].id = extraction_ids
 		out_extractions[-1].extraction_factor = extraction_factor
+		if galena_extraction:
+			out_extractions[-1].set_extract_galena()
 		%Ground.add_child(out_extractions[-1])
 		make_scan(out_extractions[-1], "[" + str(extraction_ids) + "]")
 		extraction_ids += 1
@@ -103,7 +107,8 @@ func open_upgrade_menu(open: bool):
 		can_open_menu = false
 		for i in range(%UpgradeFlowContainer.get_child_count()):
 			%UpgradeFlowContainer.get_child(i).text = ""
-			var message: String = %UpgradeSystem.get_upgrade_text(i) if i < 8 else "[center][color=lightgreen][9] [color=green]toggle\nradar audio\nfeedback"
+			var inc_dec: String = "increase" if %RadarUI.is_lower() else "decrease"
+			var message: String = %UpgradeSystem.get_upgrade_text(i) if i < 8 else "[center][color=lightgreen][9] [color=green]" + inc_dec +"\nradar audio\nfeedback" if %RadarUI.is_active() else ""
 			show_message_slow_later(0.1, 0.5, %UpgradeFlowContainer.get_child(i), message, 0.02, "")
 		await seconds(2.5)
 		can_open_menu = true
@@ -114,12 +119,13 @@ func open_upgrade_menu(open: bool):
 
 
 func update_counts():
-	%LabelIron.text = "[color=green]" + str(iron) + " [color=lightgreen]Fe"
+	%LabelIron.text = "[right][color=green]" + str(iron) + " [color=lightgreen]Fe"
 	var bis_color: String
-	if bismuthine > 480: bis_color = "[color=green]"
-	elif bismuthine > 240: bis_color = "[color=yellow]"
+	if bismuthine > 500: bis_color = "[color=green]"
+	elif bismuthine > 250: bis_color = "[color=yellow]"
 	else: bis_color = "[color=red]"
-	%LabelBismuthine.text = bis_color + str(bismuthine) + " [color=lightgreen]Bi"
+	%LabelBismuthine.text = "[right]" + bis_color + str(bismuthine) + " [color=lightgreen]Bi"
+	%LabelGold.text = "[right][color=green]" + str(gold) + " [color=lightgreen]Au"
 
 func seconds(t: float, t2: float = -1):
 	if t2 > 0:
@@ -147,8 +153,6 @@ func show_message_slow_later(t1: float, t2: float, label: RichTextLabel, message
 func reset_sampling_message():
 	show_message_slow(%LabelSampling, "[color=lightgreen]E[color=green] - Send sampling drone [color=lightgreen]{20 Bi}", 0.01)
 
-## MAKE RADAR UNLOCKABLE
-
 func show_deposit_info(deposit: Deposit):
 	var text_base: String = "Sample Composition:\n"
 	var comp = deposit.get_composition_percentage()
@@ -156,6 +160,7 @@ func show_deposit_info(deposit: Deposit):
 		var key_name: String = key
 		if key_name == "iron": key_name = "iron (fe)"
 		elif key_name == "bismuthine": key_name = "bismuthine (bi)"
+		elif key_name == "gold": key_name = "gold (au)"
 		text_base += "- " + str(comp[key]) + "%\t" + key_name + "\n"
 	var amount: int = deposit.get_total_amount()
 	if amount < 450: text_base += "Low Amount"
@@ -206,7 +211,7 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 		show_message_slow(label, id_head + "Found deposit, moving...", 0.01)
 		drone.move_toward_deposit(deposit)
 		await drone.finished_moving
-		show_message_slow(label, id_head + "Deposit reached, extracting...", 0.1)
+		show_message_slow(label, id_head + "Deposit reached, extracting...", 0.01)
 		drone.set_drilling_audio(true)
 		drone.extract_deposit(deposit)
 		await drone.finished_extracting
@@ -214,10 +219,15 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 		drone.set_drilling_audio(false)
 		deposit = drone.find_deposit()
 	await seconds(6, 15)
-	show_message_slow(label, id_head + "No more deposits found, awaiting collection by aircraft", 0.04, "yellow")
-	drone.ready_for_grab = true
-	drone.blink()
-	await drone.grabbed
+	if drone.is_empty():
+		show_message_slow(label, id_head + "No deposits found, self-destroying...", 0.04, "yellow")
+		await seconds(5)
+		drone.disappear()
+	else:
+		show_message_slow(label, id_head + "No more deposits found, awaiting collection by aircraft", 0.04, "yellow")
+		drone.ready_for_grab = true
+		drone.blink()
+		await drone.grabbed
 	label.queue_free()
 
 func extraction_fail_routine():
@@ -237,6 +247,9 @@ func extraction_grab_routine(drone: ExtractionDrone):
 	if "bismuthine" in content:
 		bismuthine += content["bismuthine"]
 		grab_results += "[" + str(content["bismuthine"]) + " Bi] "
+	if "gold" in content:
+		gold += content["gold"]
+		grab_results += "[" + str(content["gold"]) + " Au] "
 	update_counts()
 	drone.grab()
 	can_grab_extraction = false
@@ -260,6 +273,10 @@ func add_iron(value: int):
 
 func add_bismuthine(value: int):
 	bismuthine += value
+	update_counts()
+
+func add_gold(value: int):
+	gold += value
 	update_counts()
 
 func _on_timer_bismuthine_timeout():

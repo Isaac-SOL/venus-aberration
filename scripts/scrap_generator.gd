@@ -22,4 +22,4 @@ func _on_generator_timer_timeout():
 	new_scan.set_value(new_scrap.value)
 	new_scan.follow_node = new_scrap
 	%WorldUI.add_child(new_scan)
-	$GeneratorTimer.start(randf_range(time.x, time.y))
+	$GeneratorTimer.start(randf_range(time.x, time.y) * (1.0 if $/root/Main.iron >= 50 else 0.3))

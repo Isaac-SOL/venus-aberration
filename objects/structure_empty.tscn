@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3 uid="uid://djsodpc5gmdhx"]
+
+[ext_resource type="Script" path="res://scripts/structure_empty.gd" id="1_qytam"]
+[ext_resource type="Texture2D" uid="uid://c4ks5t67yjsum" path="res://assets/sprites/structure_1.png" id="2_2a7l8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_atmvx"]
+radius = 99.0
+height = 248.0
+
+[node name="StructureEmpty" type="Area2D"]
+collision_layer = 2
+script = ExtResource("1_qytam")
+composition_type = 0
+composition = {
+"???": 120,
+"other": 87
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+modulate = Color(0.560784, 0.560784, 0.560784, 1)
+shape = SubResource("CapsuleShape2D_atmvx")
+
+[node name="Background" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.501961)
+scale = Vector2(4, 4)
+texture = ExtResource("2_2a7l8")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

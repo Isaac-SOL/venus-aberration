@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://b0q64717o78vr"]
+[gd_scene load_steps=12 format=3 uid="uid://b0q64717o78vr"]
 
 [ext_resource type="Script" path="res://scripts/radar_ui.gd" id="1_ads4h"]
 [ext_resource type="PackedScene" uid="uid://d0slcoxfu6yre" path="res://objects/radar_point.tscn" id="2_u11iu"]
@@ -6,6 +6,7 @@
 [ext_resource type="AudioStream" uid="uid://y2pkapecwqww" path="res://assets/audio/kenney/tone1.ogg" id="3_y2j2b"]
 [ext_resource type="Texture2D" uid="uid://chspill0j2mt5" path="res://assets/sprites/radar_lines_2.png" id="4_74veb"]
 [ext_resource type="Texture2D" uid="uid://ig2q2snu4j8n" path="res://assets/sprites/radar_lines_3.png" id="5_7r0vo"]
+[ext_resource type="AudioStream" uid="uid://bfiuqg2fxda2x" path="res://assets/audio/kenney/tone1_short.ogg" id="7_jtcg2"]
 
 [sub_resource type="Curve" id="Curve_ydw5i"]
 max_value = 2.0
@@ -23,11 +24,17 @@ random_volume_offset_db = 3.0
 stream_0/stream = ExtResource("3_y2j2b")
 stream_0/weight = 1.0
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_p68fh"]
+streams_count = 1
+random_volume_offset_db = 9.0
+stream_0/stream = ExtResource("7_jtcg2")
+stream_0/weight = 1.0
+
 [node name="RadarUI" type="CanvasLayer" node_paths=PackedStringArray("beep_types")]
 layer = 2
 script = ExtResource("1_ads4h")
 point_scene = ExtResource("2_u11iu")
-beep_types = [NodePath("BeepAudioMid"), NodePath("BeepAudioHigh")]
+beep_types = [NodePath("BeepAudioMid"), NodePath("BeepAudioHigh"), NodePath("BeepAudioShort"), NodePath("BeepAudioLow")]
 radar_sprites = Array[Texture2D]([ExtResource("3_3q1qy"), ExtResource("4_74veb"), ExtResource("5_7r0vo")])
 
 [node name="RadarLines" type="Sprite2D" parent="."]
@@ -56,5 +63,19 @@ bus = &"Radar"
 stream = SubResource("AudioStreamRandomizer_ynns8")
 volume_db = -27.0
 pitch_scale = 2.5
+max_polyphony = 4
+bus = &"Radar"
+
+[node name="BeepAudioShort" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_p68fh")
+volume_db = -33.0
+pitch_scale = 2.0
+max_polyphony = 4
+bus = &"Radar"
+
+[node name="BeepAudioLow" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_ynns8")
+volume_db = -27.0
+pitch_scale = 1.5
 max_polyphony = 4
 bus = &"Radar"

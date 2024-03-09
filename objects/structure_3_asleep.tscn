@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6c83jo8d6b6o"]
+
+[ext_resource type="PackedScene" uid="uid://opfrf2m2mvto" path="res://objects/structure_3.tscn" id="1_etwq0"]
+
+[node name="Structure" instance=ExtResource("1_etwq0")]
+sleeping = true
+
+[node name="CollisionShape2D" parent="." index="0"]
+modulate = Color(0, 0, 0, 1)

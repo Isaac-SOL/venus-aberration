@@ -1,11 +1,10 @@
-[gd_scene load_steps=48 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=42 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
 [ext_resource type="PackedScene" uid="uid://b7fewj57p7iav" path="res://objects/sampling_drone.tscn" id="2_gjms3"]
 [ext_resource type="PackedScene" uid="uid://de1r5lot8apoj" path="res://objects/radar.tscn" id="2_p4ckd"]
 [ext_resource type="Script" path="res://scripts/screenshake_camera.gd" id="2_u5apd"]
-[ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="3_btj6u"]
 [ext_resource type="PackedScene" uid="uid://bujdllpt40tyt" path="res://objects/extraction_drone.tscn" id="3_sdcrf"]
 [ext_resource type="PackedScene" uid="uid://mybibyf5jv4v" path="res://objects/status_label.tscn" id="4_cyim7"]
 [ext_resource type="Script" path="res://scripts/upgrade_system.gd" id="6_2a65r"]
@@ -17,18 +16,13 @@
 [ext_resource type="AudioStream" uid="uid://cb74puv8mlwu8" path="res://assets/audio/kenney/back_001_edited.ogg" id="10_ju6lk"]
 [ext_resource type="AudioStream" uid="uid://dbwtwnurootbd" path="res://assets/audio/kenney/confirmation_001_edited.ogg" id="11_6ds5o"]
 [ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="12_dwlxs"]
+[ext_resource type="PackedScene" uid="uid://dhdmnbcttxunu" path="res://scenes/ground.tscn" id="12_h4l78"]
 [ext_resource type="Texture2D" uid="uid://cfl43v1rytq3x" path="res://assets/sprites/vignette.png" id="13_o4syf"]
 [ext_resource type="Shader" uid="uid://hk7eofwijlb2" path="res://shaders/crt_shader.tres" id="13_s3xhu"]
 [ext_resource type="AudioStream" uid="uid://boactc2pwxp56" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-edited.ogg" id="14_syjp0"]
-[ext_resource type="PackedScene" uid="uid://bfta0kremxg1e" path="res://objects/deposit_bis_low.tscn" id="15_6ssbb"]
 [ext_resource type="Script" path="res://scripts/scrap_generator.gd" id="16_icr88"]
-[ext_resource type="PackedScene" uid="uid://ditvyn8dehx" path="res://objects/deposit_nothing.tscn" id="16_k76fm"]
 [ext_resource type="PackedScene" uid="uid://c8dw6h147t7hg" path="res://objects/scrap.tscn" id="17_3p33g"]
 [ext_resource type="PackedScene" uid="uid://bksld1p4dpxtm" path="res://objects/scrap_scan.tscn" id="18_8uqgm"]
-[ext_resource type="PackedScene" uid="uid://c00dwyidl3mp2" path="res://objects/deposit_iron_high.tscn" id="18_w74od"]
-[ext_resource type="PackedScene" uid="uid://c6po6vp8c1s8g" path="res://objects/deposit_iron_low.tscn" id="19_m5ew7"]
-[ext_resource type="PackedScene" uid="uid://7jq1akxvhqng" path="res://objects/deposit_high.tscn" id="20_58hj8"]
-[ext_resource type="PackedScene" uid="uid://c2l465fyjwl12" path="res://objects/deposit_bis_high.tscn" id="21_ftojt"]
 
 [sub_resource type="Gradient" id="Gradient_2xegu"]
 colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
@@ -120,7 +114,7 @@ shader_parameter/Noise = SubResource("NoiseTexture2D_sy2kd")
 [node name="Main" type="Node"]
 script = ExtResource("1_jec0e")
 iron = 0
-bismuthine = 1500
+bismuthine = 2000
 sampling_drone = ExtResource("2_gjms3")
 extraction_drone = ExtResource("3_sdcrf")
 extraction_drone_price = 50
@@ -176,102 +170,8 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.4, 0.235294, 0.0196078, 1)
 
-[node name="Ground" type="CanvasLayer" parent="."]
+[node name="Ground" parent="." instance=ExtResource("12_h4l78")]
 unique_name_in_owner = true
-follow_viewport_enabled = true
-
-[node name="DepositBisLow" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(428, 308)
-
-[node name="DepositBisLow2" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(1016, 824)
-
-[node name="DepositNothing" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(765, -57)
-
-[node name="DepositNothing2" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(-96, 532)
-
-[node name="Deposit" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(569, 1276)
-
-[node name="Deposit2" parent="Ground" instance=ExtResource("3_btj6u")]
-position = Vector2(562, 1354)
-
-[node name="DepositNothing3" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(278, 975)
-
-[node name="DepositNothing4" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(2211, 1080)
-
-[node name="DepositNothing5" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(272, 2006)
-
-[node name="DepositNothing6" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(4362, 2966)
-
-[node name="DepositNothing7" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(4473, 2873)
-
-[node name="DepositNothing8" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(4347, 2847)
-
-[node name="DepositIronHigh" parent="Ground" instance=ExtResource("18_w74od")]
-position = Vector2(2441, 1706)
-
-[node name="DepositIronLow" parent="Ground" instance=ExtResource("19_m5ew7")]
-position = Vector2(2223, 550)
-
-[node name="DepositNothing9" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(2576, 43)
-
-[node name="DepositNothing10" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(1923, -331)
-
-[node name="DepositHigh" parent="Ground" instance=ExtResource("20_58hj8")]
-position = Vector2(708, 3463)
-
-[node name="DepositNothing11" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(331, 2811)
-
-[node name="DepositNothing12" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(1653, 3424)
-
-[node name="DepositBisLow3" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(2446, 3494)
-
-[node name="DepositBisLow4" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(2252, 3722)
-
-[node name="DepositBisHigh" parent="Ground" instance=ExtResource("21_ftojt")]
-position = Vector2(2459, 3745)
-
-[node name="DepositNothing13" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(3209, 2976)
-
-[node name="DepositNothing14" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(3940, 1388)
-
-[node name="DepositBisHigh2" parent="Ground" instance=ExtResource("21_ftojt")]
-position = Vector2(1320, 2134)
-
-[node name="DepositBisLow5" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(1332, 1997)
-
-[node name="DepositBisLow6" parent="Ground" instance=ExtResource("15_6ssbb")]
-position = Vector2(1425, 2080)
-
-[node name="DepositIronHigh2" parent="Ground" instance=ExtResource("18_w74od")]
-position = Vector2(1196, 4076)
-
-[node name="DepositIronLow2" parent="Ground" instance=ExtResource("19_m5ew7")]
-position = Vector2(3933, 426)
-
-[node name="DepositIronLow3" parent="Ground" instance=ExtResource("19_m5ew7")]
-position = Vector2(4065, 583)
-
-[node name="DepositNothing15" parent="Ground" instance=ExtResource("16_k76fm")]
-position = Vector2(4261, -736)
 
 [node name="CloudBarrier" type="CanvasLayer" parent="."]
 
@@ -318,10 +218,11 @@ rotation = -0.255523
 script = ExtResource("16_icr88")
 scrap = ExtResource("17_3p33g")
 scrap_scan = ExtResource("18_8uqgm")
+time = Vector2(16, 80)
 
 [node name="GeneratorTimer" type="Timer" parent="Above/ScrapGeneratorPath/ScrapGenerator"]
 process_callback = 0
-wait_time = 15.0
+wait_time = 5.0
 one_shot = true
 autostart = true
 
@@ -344,6 +245,7 @@ follow_viewport_enabled = true
 [node name="RadarUI" parent="." node_paths=PackedStringArray("world_radar") instance=ExtResource("6_23oj3")]
 unique_name_in_owner = true
 layer = 15
+visible = false
 world_radar = NodePath("../Above/Radar")
 
 [node name="MainUI" type="CanvasLayer" parent="."]
@@ -424,7 +326,8 @@ texture_filter = 2
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -196.0
+offset_left = -179.0
+offset_right = -30.0
 offset_bottom = 90.0
 grow_horizontal = 0
 size_flags_horizontal = 8
@@ -439,7 +342,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "[color=green]200 [color=lightgreen]Fe"
+text = "[right][color=green]200 [color=lightgreen]Fe"
 fit_content = true
 
 [node name="LabelBismuthine" type="RichTextLabel" parent="MainUI/MoneyContainer/VBoxContainer"]
@@ -447,7 +350,19 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "[color=green]2000 [color=lightgreen]Bi"
+text = "[right][color=green]2000 [color=lightgreen]Bi"
+fit_content = true
+
+[node name="LabelGold" type="RichTextLabel" parent="MainUI"]
+unique_name_in_owner = true
+offset_left = 903.0
+offset_top = 11.0
+offset_right = 1099.0
+offset_bottom = 101.0
+theme = ExtResource("12_dwlxs")
+theme_override_font_sizes/normal_font_size = 48
+bbcode_enabled = true
+text = "[right][color=green]0 [color=lightgreen]Au"
 fit_content = true
 
 [node name="SampleContainer" type="MarginContainer" parent="MainUI"]

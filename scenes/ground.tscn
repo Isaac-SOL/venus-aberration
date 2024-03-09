@@ -1,0 +1,280 @@
+[gd_scene load_steps=18 format=3 uid="uid://dhdmnbcttxunu"]
+
+[ext_resource type="PackedScene" uid="uid://bfta0kremxg1e" path="res://objects/deposit_bis_low.tscn" id="1_02ykx"]
+[ext_resource type="PackedScene" uid="uid://ditvyn8dehx" path="res://objects/deposit_nothing.tscn" id="2_jge0a"]
+[ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="3_3sxjr"]
+[ext_resource type="PackedScene" uid="uid://c00dwyidl3mp2" path="res://objects/deposit_iron_high.tscn" id="4_ar6fy"]
+[ext_resource type="PackedScene" uid="uid://c6po6vp8c1s8g" path="res://objects/deposit_iron_low.tscn" id="5_mfhcu"]
+[ext_resource type="PackedScene" uid="uid://7jq1akxvhqng" path="res://objects/deposit_high.tscn" id="6_qqat1"]
+[ext_resource type="PackedScene" uid="uid://c2l465fyjwl12" path="res://objects/deposit_bis_high.tscn" id="7_lmuu3"]
+[ext_resource type="PackedScene" uid="uid://d0xt3y40yrlt4" path="res://objects/deposit_gold_low.tscn" id="8_vnsmk"]
+[ext_resource type="PackedScene" uid="uid://d25qym17xbur8" path="res://objects/structure_1.tscn" id="9_xnp7g"]
+[ext_resource type="PackedScene" uid="uid://dkyo4jwdmdhy2" path="res://objects/structure_empty_2.tscn" id="10_fxixf"]
+[ext_resource type="PackedScene" uid="uid://doqf134766n6l" path="res://objects/structure_empty_3.tscn" id="11_1g1dt"]
+[ext_resource type="PackedScene" uid="uid://djsodpc5gmdhx" path="res://objects/structure_empty.tscn" id="12_r22rn"]
+[ext_resource type="PackedScene" uid="uid://4yi5uhu3shnn" path="res://objects/structure_1_asleep.tscn" id="13_2gvn4"]
+[ext_resource type="PackedScene" uid="uid://c0no1t1eoh0fl" path="res://objects/structure_2_asleep.tscn" id="14_40xim"]
+[ext_resource type="PackedScene" uid="uid://b6c83jo8d6b6o" path="res://objects/structure_3_asleep.tscn" id="15_yjxvr"]
+[ext_resource type="PackedScene" uid="uid://dxrlu3cl7vlrm" path="res://objects/structure_2.tscn" id="16_jkuub"]
+[ext_resource type="PackedScene" uid="uid://opfrf2m2mvto" path="res://objects/structure_3.tscn" id="17_rnhtp"]
+
+[node name="Ground" type="CanvasLayer"]
+follow_viewport_enabled = true
+
+[node name="DepositBisLow" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(428, 308)
+
+[node name="DepositBisLow2" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(1016, 824)
+
+[node name="DepositNothing" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(765, -57)
+
+[node name="DepositNothing2" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(-96, 532)
+
+[node name="Deposit" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(569, 1276)
+
+[node name="Deposit2" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(562, 1354)
+
+[node name="DepositNothing3" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(278, 975)
+
+[node name="DepositNothing4" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(2211, 1080)
+
+[node name="DepositNothing5" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(272, 2006)
+
+[node name="DepositNothing6" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4362, 2966)
+
+[node name="DepositNothing7" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4473, 2873)
+
+[node name="DepositNothing8" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4347, 2847)
+
+[node name="DepositIronHigh" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(2441, 1706)
+
+[node name="DepositIronLow" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(2223, 550)
+
+[node name="DepositNothing9" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(2576, 43)
+
+[node name="DepositNothing10" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(1923, -331)
+
+[node name="DepositHigh" parent="." instance=ExtResource("6_qqat1")]
+position = Vector2(708, 3463)
+
+[node name="DepositNothing11" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(331, 2811)
+
+[node name="DepositNothing12" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(1653, 3424)
+
+[node name="DepositBisLow3" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(2446, 3494)
+
+[node name="DepositBisLow4" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(2252, 3722)
+
+[node name="DepositBisHigh" parent="." instance=ExtResource("7_lmuu3")]
+position = Vector2(2459, 3745)
+
+[node name="DepositNothing13" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(3209, 2976)
+
+[node name="DepositNothing14" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(3940, 1388)
+
+[node name="DepositBisHigh2" parent="." instance=ExtResource("7_lmuu3")]
+position = Vector2(3651, 2269)
+
+[node name="DepositBisLow5" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(1332, 1997)
+
+[node name="DepositBisLow6" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(1425, 2080)
+
+[node name="DepositIronHigh2" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(1196, 4076)
+
+[node name="DepositIronLow2" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(3933, 426)
+
+[node name="DepositIronLow3" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(4065, 583)
+
+[node name="DepositNothing15" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4261, -736)
+
+[node name="DepositNothing16" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(-320, 3648)
+
+[node name="DepositIronHigh3" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(4840, 3498)
+
+[node name="DepositGoldLow" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(3543, 3841)
+
+[node name="DepositGoldLow2" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(514, 4617)
+
+[node name="Deposit3" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(5524, 933)
+
+[node name="Deposit4" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(5681, 1004)
+
+[node name="DepositHigh2" parent="." instance=ExtResource("6_qqat1")]
+position = Vector2(5561, 1053)
+
+[node name="DepositNothing17" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(5078, 2021)
+
+[node name="DepositBisLow7" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(5468, 2419)
+
+[node name="DepositBisLow8" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(6146, 207)
+
+[node name="DepositNothing18" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(5417, -683)
+
+[node name="DepositNothing19" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(6544, 1572)
+
+[node name="DepositGoldLow3" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(6557, 2650)
+
+[node name="DepositNothing20" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(7249, 223)
+
+[node name="DepositGoldLow4" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(5505, 5180)
+
+[node name="DepositIronHigh4" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(5692, 4044)
+
+[node name="DepositIronLow4" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(5675, 3900)
+
+[node name="DepositBisHigh3" parent="." instance=ExtResource("7_lmuu3")]
+position = Vector2(6537, 4494)
+
+[node name="DepositNothing21" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(7429, 3483)
+
+[node name="DepositNothing22" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4190, 4658)
+
+[node name="DepositNothing23" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(1690, 4847)
+
+[node name="Deposit5" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(2657, 4734)
+
+[node name="Deposit6" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(3253, 5625)
+
+[node name="DepositIronHigh5" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(3336, 5715)
+
+[node name="DepositIronLow5" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(3366, 5619)
+
+[node name="DepositGoldLow5" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(1728, 6907)
+
+[node name="DepositNothing24" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(1120, 5814)
+
+[node name="DepositNothing25" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(-425, 6533)
+
+[node name="DepositIronLow6" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(572, 6506)
+
+[node name="DepositIronLow7" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(4550, 5877)
+
+[node name="DepositIronLow8" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(114, 5437)
+
+[node name="DepositIronLow9" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(2149, 2660)
+
+[node name="DepositIronLow10" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(3094, 6611)
+
+[node name="DepositBisLow9" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(4683, 6772)
+
+[node name="DepositBisLow10" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(4495, 6754)
+
+[node name="StructureEmpty" parent="." groups=["Structures"] instance=ExtResource("10_fxixf")]
+position = Vector2(1623, 5481)
+collision_mask = 0
+
+[node name="StructureEmpty2" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+position = Vector2(2658, 6319)
+collision_mask = 0
+
+[node name="StructureEmpty3" parent="." instance=ExtResource("12_r22rn")]
+position = Vector2(5001, 4167)
+
+[node name="StructureEmpty4" parent="." groups=["Structures"] instance=ExtResource("10_fxixf")]
+position = Vector2(6811, 3545)
+collision_mask = 0
+
+[node name="StructureEmpty5" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+position = Vector2(300, 7177)
+collision_mask = 0
+
+[node name="StructureEmpty6" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+position = Vector2(3493, 4689)
+collision_mask = 0
+
+[node name="Structure2" parent="." instance=ExtResource("9_xnp7g")]
+position = Vector2(7245, 4980)
+
+[node name="StructureEmpty9" parent="." instance=ExtResource("10_fxixf")]
+position = Vector2(5797, 1778)
+collision_mask = 0
+
+[node name="Structure3" parent="." instance=ExtResource("9_xnp7g")]
+position = Vector2(1756, 7596)
+
+[node name="Structure4" parent="." instance=ExtResource("13_2gvn4")]
+position = Vector2(1202, 3003)
+
+[node name="Structure6" parent="." instance=ExtResource("13_2gvn4")]
+position = Vector2(4754, 1306)
+
+[node name="Structure8" parent="." instance=ExtResource("13_2gvn4")]
+position = Vector2(7334, 2052)
+
+[node name="Structure5" parent="." instance=ExtResource("14_40xim")]
+position = Vector2(3899, 3309)
+
+[node name="Structure7" parent="." instance=ExtResource("15_yjxvr")]
+position = Vector2(5524, 3017)
+
+[node name="Structure9" parent="." instance=ExtResource("14_40xim")]
+position = Vector2(38, 4897)
+
+[node name="Structure10" parent="." instance=ExtResource("15_yjxvr")]
+position = Vector2(2146, 4237)
+
+[node name="Structure" parent="." instance=ExtResource("16_jkuub")]
+position = Vector2(4064, 6992)
+
+[node name="Structure11" parent="." instance=ExtResource("17_rnhtp")]
+position = Vector2(5270, 5748)

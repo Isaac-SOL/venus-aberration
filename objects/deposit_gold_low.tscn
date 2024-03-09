@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://d0xt3y40yrlt4"]
+
+[ext_resource type="PackedScene" uid="uid://d0chndtusx0a4" path="res://objects/deposit.tscn" id="1_idlpj"]
+
+[node name="DepositGoldLow" instance=ExtResource("1_idlpj")]
+modulate = Color(0, 1, 1, 1)
+composition_type = 8
