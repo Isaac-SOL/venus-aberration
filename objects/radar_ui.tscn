@@ -40,7 +40,7 @@ random_volume_offset_db = 9.0
 stream_0/stream = ExtResource("7_jtcg2")
 stream_0/weight = 1.0
 
-[node name="RadarUI" type="CanvasLayer"]
+[node name="RadarUI" type="CanvasLayer" groups=["RadarUI"]]
 layer = 2
 script = ExtResource("1_ads4h")
 point_scene = ExtResource("2_u11iu")

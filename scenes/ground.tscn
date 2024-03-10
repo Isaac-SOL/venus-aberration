@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://dhdmnbcttxunu"]
+[gd_scene load_steps=22 format=3 uid="uid://dhdmnbcttxunu"]
 
 [ext_resource type="PackedScene" uid="uid://bfta0kremxg1e" path="res://objects/deposit_bis_low.tscn" id="1_02ykx"]
 [ext_resource type="PackedScene" uid="uid://ditvyn8dehx" path="res://objects/deposit_nothing.tscn" id="2_jge0a"]
@@ -17,6 +17,8 @@
 [ext_resource type="PackedScene" uid="uid://b6c83jo8d6b6o" path="res://objects/structure_3_asleep.tscn" id="15_yjxvr"]
 [ext_resource type="PackedScene" uid="uid://dxrlu3cl7vlrm" path="res://objects/structure_2.tscn" id="16_jkuub"]
 [ext_resource type="PackedScene" uid="uid://opfrf2m2mvto" path="res://objects/structure_3.tscn" id="17_rnhtp"]
+[ext_resource type="PackedScene" uid="uid://c5biix5e75rpb" path="res://scenes/mystery.tscn" id="18_gudkc"]
+[ext_resource type="PackedScene" uid="uid://dxr4fao1oomb0" path="res://objects/deposit_gold_high.tscn" id="19_85yc5"]
 
 [sub_resource type="GDScript" id="GDScript_a64f2"]
 script/source = "extends CanvasLayer
@@ -328,6 +330,108 @@ position = Vector2(-1592, 67)
 
 [node name="Structure15" parent="." instance=ExtResource("17_rnhtp")]
 position = Vector2(-1592, -238)
+
+[node name="Mystery" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(-2160, 378)
+
+[node name="Mystery2" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(-2161, -193)
+
+[node name="Mystery3" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(6529, 6320)
+
+[node name="Mystery4" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(3128, 8105)
+
+[node name="Mystery5" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(5900, 7876)
+
+[node name="Mystery6" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(297, 5986)
+
+[node name="Mystery7" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(4103, 5749)
+
+[node name="Mystery8" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(2596, 2760)
+
+[node name="Mystery9" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(1258, 1483)
+
+[node name="Mystery10" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(6527, 1053)
+
+[node name="Mystery11" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(86, 3799)
+
+[node name="Mystery12" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(2693, 5399)
+
+[node name="Mystery13" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(4290, 2283)
+
+[node name="Mystery14" parent="." instance=ExtResource("18_gudkc")]
+position = Vector2(6052, 4548)
+
+[node name="DepositGoldHigh" parent="." instance=ExtResource("19_85yc5")]
+position = Vector2(5816, 7253)
+
+[node name="DepositGoldHigh2" parent="." instance=ExtResource("19_85yc5")]
+position = Vector2(5069, 8226)
+
+[node name="DepositGoldHigh3" parent="." instance=ExtResource("19_85yc5")]
+position = Vector2(3711, 8453)
+
+[node name="DepositGoldLow7" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(3610, 8379)
+
+[node name="DepositGoldLow8" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(3717, 8272)
+
+[node name="DepositGoldLow9" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(2857, 7644)
+
+[node name="DepositIronHigh6" parent="." instance=ExtResource("4_ar6fy")]
+position = Vector2(1245, 8243)
+
+[node name="DepositIronLow11" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(1420, 8289)
+
+[node name="DepositIronLow12" parent="." instance=ExtResource("5_mfhcu")]
+position = Vector2(6664, 5777)
+
+[node name="DepositBisHigh4" parent="." instance=ExtResource("7_lmuu3")]
+position = Vector2(6817, 5800)
+
+[node name="DepositBisLow11" parent="." instance=ExtResource("1_02ykx")]
+position = Vector2(6755, 5709)
+
+[node name="DepositGoldHigh4" parent="." instance=ExtResource("19_85yc5")]
+position = Vector2(7315, 7118)
+
+[node name="DepositGoldHigh5" parent="." instance=ExtResource("19_85yc5")]
+position = Vector2(6681, 8464)
+
+[node name="DepositNothing26" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(5759, 8883)
+
+[node name="DepositNothing27" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(2207, 8701)
+
+[node name="DepositNothing28" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(340, 8141)
+
+[node name="DepositNothing29" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(4860, 7621)
+
+[node name="DepositNothing30" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(7496, 8096)
+
+[node name="DepositNothing31" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(7988, 6173)
+
+[node name="DepositNothing32" parent="." instance=ExtResource("2_jge0a")]
+position = Vector2(8248, 4821)
 
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

@@ -54,12 +54,14 @@ func causes_extinction() -> bool:
 
 func caused_extinction():
 	get_tree().call_group("Structures", "increase_level_to", 2)
+	get_tree().call_group("Mysteries", "increase_level_to", 0)
 
 func causes_destruction() -> bool:
 	return level == 2 and small_destruction
 
 func caused_destruction():
-	small_destruction = false
+	if not block_evolution:
+		small_destruction = false
 
 func causes_big_destruction() -> bool:
 	return level == 2 and not small_destruction

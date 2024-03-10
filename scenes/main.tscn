@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=44 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -10,6 +10,7 @@
 [ext_resource type="Script" path="res://scripts/upgrade_system.gd" id="6_2a65r"]
 [ext_resource type="PackedScene" uid="uid://b0q64717o78vr" path="res://objects/radar_ui.tscn" id="6_23oj3"]
 [ext_resource type="Shader" uid="uid://d3ee5lmk6vklk" path="res://shaders/cloud_shader.tres" id="6_aipgl"]
+[ext_resource type="PackedScene" uid="uid://dhgb7mbmjfko2" path="res://objects/shade.tscn" id="7_sh3fm"]
 [ext_resource type="AudioStream" uid="uid://g6s7okmplv6n" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180.ogg" id="8_7cydg"]
 [ext_resource type="AudioStream" uid="uid://5mr6tmlnmm4a" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180_short.ogg" id="8_roxjh"]
 [ext_resource type="Shader" uid="uid://cgj41v1cki3pc" path="res://shaders/cloud_shader_2.tres" id="10_cx3xn"]
@@ -104,6 +105,7 @@ extraction_drone_price = 50
 status_label = ExtResource("4_cyim7")
 scrap_scan = ExtResource("18_8uqgm")
 gold_deposit = ExtResource("19_u2gof")
+shade = ExtResource("7_sh3fm")
 
 [node name="UpgradeSystem" type="Node" parent="."]
 unique_name_in_owner = true
@@ -252,9 +254,9 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -624.0
+offset_left = -597.0
 offset_top = -288.0
-offset_right = -55.0
+offset_right = -28.0
 offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
@@ -313,7 +315,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -969.0
 offset_top = -285.0
-offset_right = -636.0
+offset_right = -610.0
 offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
@@ -368,14 +370,14 @@ frame_progress = 0.132893
 
 [node name="LabelGold" type="RichTextLabel" parent="MainUI"]
 unique_name_in_owner = true
-offset_left = 793.0
-offset_top = 51.0
-offset_right = 989.0
-offset_bottom = 141.0
+offset_left = 83.0
+offset_top = 31.0
+offset_right = 279.0
+offset_bottom = 121.0
 theme = ExtResource("12_dwlxs")
 theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
-text = "[right][color=green]0 [color=lightgreen]Au"
+text = "[color=green]0 [color=lightgreen]Au"
 fit_content = true
 
 [node name="SampleContainer" type="MarginContainer" parent="MainUI"]
@@ -385,9 +387,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -455.0
+offset_left = -467.0
 offset_top = -235.0
-offset_right = -36.0
+offset_right = -48.0
 offset_bottom = 86.0
 grow_horizontal = 0
 grow_vertical = 2
@@ -403,10 +405,10 @@ tab_size = 8
 [node name="UpgradeContainer" type="MarginContainer" parent="MainUI"]
 unique_name_in_owner = true
 visible = false
-offset_left = 82.0
-offset_top = 27.0
-offset_right = 767.0
-offset_bottom = 448.0
+offset_left = 90.0
+offset_top = 82.0
+offset_right = 775.0
+offset_bottom = 503.0
 theme = ExtResource("12_dwlxs")
 
 [node name="UpgradeFlowContainer" type="FlowContainer" parent="MainUI/UpgradeContainer"]

@@ -18,12 +18,7 @@ const upgrades: Array[Array] = [
 		{
 			title = "upgrade\nradar speed",
 			message = "+ 25% speed",
-			price = 200
-		},
-		{
-			title = "upgrade\nradar speed",
-			message = "+ 33% speed",
-			price = 350
+			price = 300
 		},
 	],
 	[
@@ -163,9 +158,6 @@ func perform_upgrade(pos: int):
 		[0, 2]:
 			%Radar.rot_speed = (PI * 2.0) / 3
 			%RadarUI.point_lifetime = 3
-		[0, 3]:
-			%Radar.rot_speed = (PI * 2.0) / 2
-			%RadarUI.point_lifetime = 2
 		[1, _]:
 			%Radar.set_shape_level(levels[pos] + 1)
 			%RadarUI.set_radar_level(levels[pos] + 1)

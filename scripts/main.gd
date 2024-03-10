@@ -10,6 +10,7 @@ class_name Main extends Node
 @export var status_label: PackedScene
 @export var scrap_scan: PackedScene
 @export var gold_deposit: PackedScene
+@export var shade: PackedScene
 
 var drone_out: bool = false
 var can_send_or_stop_sample: bool = true
@@ -72,16 +73,29 @@ func _ready():
 	await seconds(20)
 	queue_hint(HINT_FLOATING_SCRAP)
 	spawn_leading_gold()
+	spawn_leading_shade()
 
 func spawn_leading_gold():
 	await seconds(250)
 	while true:
 		await seconds(180)
+		print("spawned gold")
 		if Structure.global_level >= 1:
 			break
 		var new_deposit: Deposit = gold_deposit.instantiate()
 		new_deposit.global_position = PlayerCharacter.static_pos + Vector2(600, 330)
 		%Ground.add_child(new_deposit)
+
+func spawn_leading_shade():
+	await seconds(0)
+	while true:
+		await seconds(30)
+		print("spawned shade")
+		if Structure.global_level >= 2:
+			break
+		var new_shade: Node2D = shade.instantiate()
+		new_shade.global_position = PlayerCharacter.static_pos + Vector2(680, 400)
+		%Ground.add_child(new_shade)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -205,7 +219,7 @@ func update_counts():
 	elif bismuthine > 250: bis_color = "[color=yellow]"
 	else: bis_color = "[color=red]"
 	%LabelBismuthine.text = "[right]" + bis_color + str(bismuthine) + " [color=lightgreen]Bi"
-	%LabelGold.text = "[right][color=green]" + str(gold) + " [color=lightgreen]Au"
+	%LabelGold.text = "[color=green]" + str(gold) + " [color=lightgreen]Au"
 	if not menu_open and %UpgradeSystem.get_upgrade_level(0) == 0 and iron >= %UpgradeSystem.get_upgrade_price(0):
 		%LabelMenu.text = MENU_OPEN_ATTENTION
 
@@ -271,7 +285,7 @@ func sampling_routine(drone: SamplingDrone):
 	await seconds(4)
 	show_message_slow(%LabelSampling, DRONE_SAMPLING_SEARCHING, 0.01)
 	
-	if(drone.is_on_structure_causing_extinction()):
+	if(drone.is_on_structure_causing_extinction() or drone.is_on_structure_causing_destruction()):
 		await seconds(3)
 		drone.destroy_slow()
 		await seconds(7)
@@ -343,7 +357,9 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 		
 		if(drone.is_on_structure_causing_destruction()):
 			await seconds(3)
-			%MainCharacter.add_speed((%MainCharacter.global_position - drone.global_position).normalized() * 500)
+			var char_vector: Vector2 = %MainCharacter.global_position - drone.global_position
+			if char_vector.length() < 300:
+				%MainCharacter.add_speed(char_vector.normalized() * 500)
 			screen_shake(2, 1.5)
 			%ExplosionAudio.play()
 			drone.destroy_immediate()

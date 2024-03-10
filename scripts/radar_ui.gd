@@ -25,12 +25,12 @@ func _process(_delta):
 			if scannable is Scannable and not (scannable is Scrap):
 				var scan_result: Array = scannable.scan()
 				if not scan_result.is_empty():
-					scan_response(scannable, scan_result)
+					scan_response(scannable.global_position, scan_result)
 	var recall_vector: Vector2 = Vector2(3650, 2270) - PlayerCharacter.static_pos
 	%RadarArrowCenter.rotation = recall_vector.angle()
 
-func scan_response(scannable: Scannable, scan_result: Array):
-	var world_vector: Vector2 = scannable.global_position - world_radar.global_position
+func scan_response(global_pos: Vector2, scan_result: Array):
+	var world_vector: Vector2 = global_pos - world_radar.global_position
 	var ui_vector = (world_vector / (world_radar_size * radar_level_factor)) * ui_radar_size
 	var new_point: Node2D = point_scene.instantiate()
 	if scan_result.size() >= 3 and scan_result[2]:
@@ -42,6 +42,11 @@ func scan_response(scannable: Scannable, scan_result: Array):
 	add_child(new_point)
 	if visible:
 		beep_types[scan_result[1]].play()
+
+func force_response(global_pos: Vector2, scan_result: Array):
+	var world_vector: Vector2 = global_pos - world_radar.global_position
+	if world_vector.length() <= world_radar_size * radar_level_factor:
+		scan_response(global_pos, scan_result)
 
 func set_radar_level(level: int):
 	%RadarLines.texture = radar_sprites[level]

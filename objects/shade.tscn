@@ -1,0 +1,44 @@
+[gd_scene load_steps=5 format=3 uid="uid://dhgb7mbmjfko2"]
+
+[ext_resource type="Script" path="res://scripts/danger.gd" id="1_lbhu5"]
+[ext_resource type="Texture2D" uid="uid://cqhtlqknar3dy" path="res://assets/sprites/lamp.png" id="2_28kek"]
+[ext_resource type="Texture2D" uid="uid://dwkqa3muabl43" path="res://assets/sprites/dot.png" id="4_pij4g"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c141a"]
+radius = 23.0
+height = 72.0
+
+[node name="Shade" type="Area2D"]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("1_lbhu5")
+max_speed = 150.0
+cause_extinction = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_c141a")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.141176, 0.0588235, 0, 0.470588)
+scale = Vector2(3, 4.5)
+texture = ExtResource("2_28kek")
+
+[node name="Light" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 0, 0, 1)
+position = Vector2(14, -16)
+scale = Vector2(2, 2)
+texture = ExtResource("4_pij4g")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-50, -50, 100, 100)
+
+[node name="FlyTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 16.0
+one_shot = true
+
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="timeout" from="FlyTimer" to="." method="_on_fly_timer_timeout"]

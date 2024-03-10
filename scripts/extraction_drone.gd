@@ -87,14 +87,14 @@ func set_drilling_audio(do_set: bool):
 
 func is_on_structure_causing_extinction() -> bool:
 	for area in %Scanner.get_overlapping_areas():
-		if area is Structure && area.causes_extinction():
+		if (area is Structure or area is DroneKiller) && area.causes_extinction():
 			area.caused_extinction()
 			return true
 	return false
 
 func is_on_structure_causing_destruction() -> bool:
 	for area in %Scanner.get_overlapping_areas():
-		if area is Structure && area.causes_destruction():
+		if (area is Structure or area is DroneKiller) && area.causes_destruction():
 			area.caused_destruction()
 			return true
 	return false

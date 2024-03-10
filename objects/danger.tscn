@@ -1,0 +1,61 @@
+[gd_scene load_steps=7 format=3 uid="uid://dnh547nv0x8ig"]
+
+[ext_resource type="Script" path="res://scripts/danger.gd" id="1_xiq1m"]
+[ext_resource type="Texture2D" uid="uid://bmhhepxis2gln" path="res://assets/sprites/scrap_blurry.png" id="2_6b56y"]
+[ext_resource type="Script" path="res://scripts/scannable.gd" id="2_sofob"]
+[ext_resource type="Texture2D" uid="uid://dwkqa3muabl43" path="res://assets/sprites/dot.png" id="4_bp1lm"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sgv1b"]
+radius = 35.0143
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fadvr"]
+radius = 20.0
+
+[node name="Danger" type="Area2D"]
+collision_layer = 0
+collision_mask = 16
+script = ExtResource("1_xiq1m")
+killer = true
+dist_per_sec = 10.0
+cause_extinction = false
+sleeping = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-4, 2)
+shape = SubResource("CircleShape2D_sgv1b")
+
+[node name="Scannable" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("2_sofob")
+scan_color = Color(1, 0, 0, 1)
+pitch_type = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Scannable"]
+shape = SubResource("CircleShape2D_fadvr")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.690196, 0.690196, 0.690196, 0.705882)
+scale = Vector2(2, 2)
+texture = ExtResource("2_6b56y")
+
+[node name="Light" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+visible = false
+modulate = Color(1, 0, 0, 1)
+position = Vector2(14, -16)
+scale = Vector2(2, 2)
+texture = ExtResource("4_bp1lm")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+rect = Rect2(-50, -50, 100, 100)
+
+[node name="FlyTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 32.0
+one_shot = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="screen_entered" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_entered"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]
+[connection signal="timeout" from="FlyTimer" to="." method="_on_fly_timer_timeout"]
