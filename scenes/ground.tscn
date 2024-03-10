@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://dhdmnbcttxunu"]
+[gd_scene load_steps=20 format=3 uid="uid://dhdmnbcttxunu"]
 
 [ext_resource type="PackedScene" uid="uid://bfta0kremxg1e" path="res://objects/deposit_bis_low.tscn" id="1_02ykx"]
 [ext_resource type="PackedScene" uid="uid://ditvyn8dehx" path="res://objects/deposit_nothing.tscn" id="2_jge0a"]
@@ -18,8 +18,37 @@
 [ext_resource type="PackedScene" uid="uid://dxrlu3cl7vlrm" path="res://objects/structure_2.tscn" id="16_jkuub"]
 [ext_resource type="PackedScene" uid="uid://opfrf2m2mvto" path="res://objects/structure_3.tscn" id="17_rnhtp"]
 
+[sub_resource type="GDScript" id="GDScript_a64f2"]
+script/source = "extends CanvasLayer
+
+signal player_exited_area
+signal player_entered_area
+
+func _on_area_2d_area_exited(area):
+	if area is PlayerCharacter:
+		player_exited_area.emit()
+
+func _on_area_2d_area_entered(area):
+	if area is PlayerCharacter:
+		player_entered_area.emit()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_udigx"]
+size = Vector2(8965, 9711)
+
 [node name="Ground" type="CanvasLayer"]
 follow_viewport_enabled = true
+script = SubResource("GDScript_a64f2")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(3901.5, 4192.5)
+shape = SubResource("RectangleShape2D_udigx")
+debug_color = Color(0, 0.6, 0.701961, 0)
 
 [node name="DepositBisLow" parent="." instance=ExtResource("1_02ykx")]
 position = Vector2(428, 308)
@@ -79,10 +108,10 @@ position = Vector2(331, 2811)
 position = Vector2(1653, 3424)
 
 [node name="DepositBisLow3" parent="." instance=ExtResource("1_02ykx")]
-position = Vector2(2446, 3494)
+position = Vector2(2446, 3595)
 
 [node name="DepositBisLow4" parent="." instance=ExtResource("1_02ykx")]
-position = Vector2(2252, 3722)
+position = Vector2(2326, 3718)
 
 [node name="DepositBisHigh" parent="." instance=ExtResource("7_lmuu3")]
 position = Vector2(2459, 3745)
@@ -112,7 +141,7 @@ position = Vector2(3933, 426)
 position = Vector2(4065, 583)
 
 [node name="DepositNothing15" parent="." instance=ExtResource("2_jge0a")]
-position = Vector2(4261, -736)
+position = Vector2(4109, -203)
 
 [node name="DepositNothing16" parent="." instance=ExtResource("2_jge0a")]
 position = Vector2(-320, 3648)
@@ -145,7 +174,7 @@ position = Vector2(5468, 2419)
 position = Vector2(6146, 207)
 
 [node name="DepositNothing18" parent="." instance=ExtResource("2_jge0a")]
-position = Vector2(5417, -683)
+position = Vector2(5188, 130)
 
 [node name="DepositNothing19" parent="." instance=ExtResource("2_jge0a")]
 position = Vector2(6544, 1572)
@@ -219,35 +248,29 @@ position = Vector2(4683, 6772)
 [node name="DepositBisLow10" parent="." instance=ExtResource("1_02ykx")]
 position = Vector2(4495, 6754)
 
-[node name="StructureEmpty" parent="." groups=["Structures"] instance=ExtResource("10_fxixf")]
+[node name="StructureEmpty" parent="." instance=ExtResource("10_fxixf")]
 position = Vector2(1623, 5481)
-collision_mask = 0
 
-[node name="StructureEmpty2" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+[node name="StructureEmpty2" parent="." instance=ExtResource("11_1g1dt")]
 position = Vector2(2658, 6319)
-collision_mask = 0
 
 [node name="StructureEmpty3" parent="." instance=ExtResource("12_r22rn")]
 position = Vector2(5001, 4167)
 
-[node name="StructureEmpty4" parent="." groups=["Structures"] instance=ExtResource("10_fxixf")]
+[node name="StructureEmpty4" parent="." instance=ExtResource("10_fxixf")]
 position = Vector2(6811, 3545)
-collision_mask = 0
 
-[node name="StructureEmpty5" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+[node name="StructureEmpty5" parent="." instance=ExtResource("11_1g1dt")]
 position = Vector2(300, 7177)
-collision_mask = 0
 
-[node name="StructureEmpty6" parent="." groups=["Structures"] instance=ExtResource("11_1g1dt")]
+[node name="StructureEmpty6" parent="." instance=ExtResource("11_1g1dt")]
 position = Vector2(3493, 4689)
-collision_mask = 0
 
 [node name="Structure2" parent="." instance=ExtResource("9_xnp7g")]
 position = Vector2(7245, 4980)
 
 [node name="StructureEmpty9" parent="." instance=ExtResource("10_fxixf")]
 position = Vector2(5797, 1778)
-collision_mask = 0
 
 [node name="Structure3" parent="." instance=ExtResource("9_xnp7g")]
 position = Vector2(1756, 7596)
@@ -278,3 +301,33 @@ position = Vector2(4064, 6992)
 
 [node name="Structure11" parent="." instance=ExtResource("17_rnhtp")]
 position = Vector2(5270, 5748)
+
+[node name="Deposit7" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(3108, 722)
+
+[node name="Deposit8" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(3237, 828)
+
+[node name="Deposit9" parent="." instance=ExtResource("3_3sxjr")]
+position = Vector2(3101, 926)
+
+[node name="DepositGoldLow6" parent="." instance=ExtResource("8_vnsmk")]
+position = Vector2(2776, 4922)
+
+[node name="StructureEmpty7" parent="." instance=ExtResource("12_r22rn")]
+position = Vector2(-910, 354)
+
+[node name="Structure12" parent="." instance=ExtResource("13_2gvn4")]
+position = Vector2(-1242, 372)
+
+[node name="Structure13" parent="." instance=ExtResource("9_xnp7g")]
+position = Vector2(-1583, 381)
+
+[node name="Structure14" parent="." instance=ExtResource("16_jkuub")]
+position = Vector2(-1592, 67)
+
+[node name="Structure15" parent="." instance=ExtResource("17_rnhtp")]
+position = Vector2(-1592, -238)
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]

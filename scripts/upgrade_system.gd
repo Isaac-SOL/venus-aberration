@@ -1,34 +1,13 @@
 class_name UpgradeSystem extends Node
 
 var labels: Array[RichTextLabel]
+var allow_extraction_upgrades: bool = false
 
 const upgrades: Array[Array] = [
 	[
 		{
-			title = "upgrade speed",
-			message = "+ 50% speed",
-			price = 100
-		},
-		{
-			title = "upgrade speed",
-			message = "+ 50% speed",
-			price = 150
-		},
-		{
-			title = "upgrade speed",
-			message = "+ 50% speed",
-			price = 250
-		},
-		{
-			title = "upgrade speed",
-			message = "+ 50% speed",
-			price = 500
-		}
-	],
-	[
-		{
 			title = "create the\nground radar",
-			message = "[color=yellow]detects metals",
+			message = "[color=yellow]detects deposits",
 			price = 60
 		},
 		{
@@ -61,6 +40,28 @@ const upgrades: Array[Array] = [
 	],
 	[
 		{
+			title = "upgrade\nspeed",
+			message = "+ 50% speed",
+			price = 100
+		},
+		{
+			title = "upgrade\nspeed",
+			message = "+ 50% speed",
+			price = 150
+		},
+		{
+			title = "upgrade\nspeed",
+			message = "+ 50% speed",
+			price = 250
+		},
+		{
+			title = "upgrade\nspeed",
+			message = "+ 50% speed",
+			price = 500
+		}
+	],
+	[
+		{
 			title = "upgrade\nengine eff.",
 			message = "- 50% Bi/sec",
 			price = 200
@@ -75,7 +76,7 @@ const upgrades: Array[Array] = [
 		{
 			title = "upgrade\nextract. speed",
 			message = "+ 100% speed",
-			price = 150
+			price = 250
 		},
 		{
 			title = "upgrade\nextract. speed",
@@ -94,14 +95,33 @@ const upgrades: Array[Array] = [
 
 var levels: Array[int] = [0, 0, 0, 0, 0, 0]
 
+func get_upgrade_level(pos: int) -> int:
+	if pos >= levels.size():
+		return 0
+	return levels[pos]
+
 func get_upgrade_info(pos: int) -> Dictionary:
 	if pos >= levels.size():
 		return {}
-	if pos == 2 and levels[1] == 0:
+	if pos == 1 and levels[0] == 0:
+		return {}
+	if not allow_extraction_upgrades and pos in [4, 5]:
 		return {}
 	if levels[pos] >= upgrades[pos].size():
 		return {}
-	return upgrades[pos][levels[pos]]
+	
+	var info : Dictionary = upgrades[pos][levels[pos]]
+	
+	# Emphasize engine efficiency if bismuthine is low
+	if not info.is_empty() and pos == 3:
+		if (levels[3] == 0 and $/root/Main.bismuthine <= 1000) or (levels[3] == 1 and $/root/Main.bismuthine <= 400):
+			info = {
+				title = info["title"],
+				message = "[color=yellow]" + info["message"],
+				price = info["price"]
+			}
+	
+	return info
 
 func get_upgrade_text(pos: int) -> String:
 	var info: Dictionary = get_upgrade_info(pos)
@@ -121,7 +141,7 @@ func get_upgrade_price(pos: int) -> int:
 func is_upgrade_valid(pos: int, available_iron: int) -> bool:
 	if pos >= upgrades.size():
 		return false
-	if pos == 2 and levels[1] == 0:
+	if pos == 1 and levels[0] == 0:
 		return false
 	var info: Dictionary = get_upgrade_info(pos)
 	if info == {}:
@@ -135,24 +155,26 @@ func perform_upgrade(pos: int):
 	if price == 0:
 		return
 	match [pos, levels[pos]]:
-		[0, _]:
-			%MainCharacter.acceleration *= 1.5
-		[1, 0]:
+		[0, 0]:
 			%RadarUI.visible = true
-		[1, 1]:
+		[0, 1]:
 			%Radar.rot_speed = (PI * 2.0) / 4
 			%RadarUI.point_lifetime = 4
-		[1, 2]:
+		[0, 2]:
 			%Radar.rot_speed = (PI * 2.0) / 3
 			%RadarUI.point_lifetime = 3
-		[1, 3]:
+		[0, 3]:
 			%Radar.rot_speed = (PI * 2.0) / 2
 			%RadarUI.point_lifetime = 2
-		[2, _]:
+		[1, _]:
 			%Radar.set_shape_level(levels[pos] + 1)
 			%RadarUI.set_radar_level(levels[pos] + 1)
+		[2, _]:
+			%MainCharacter.acceleration *= 1.5
 		[3, _]:
 			%TimerBismuthine.wait_time *= 2
+			%BatterySprite.set_frame_and_progress(0, 0)
+			%BatterySprite.pause()
 		[4, _]:
 			$"..".extraction_factor = levels[pos] + 2
 		[5, _]:

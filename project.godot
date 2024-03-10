@@ -148,6 +148,8 @@ debug_bismuthine={
 2d_physics/layer_1="Default"
 2d_physics/layer_2="Scannable"
 2d_physics/layer_3="Scrap"
+2d_physics/layer_4="Structure"
+2d_physics/layer_5="Player"
 
 [rendering]
 

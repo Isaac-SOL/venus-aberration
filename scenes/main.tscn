@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=43 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -17,40 +17,36 @@
 [ext_resource type="AudioStream" uid="uid://dbwtwnurootbd" path="res://assets/audio/kenney/confirmation_001_edited.ogg" id="11_6ds5o"]
 [ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="12_dwlxs"]
 [ext_resource type="PackedScene" uid="uid://dhdmnbcttxunu" path="res://scenes/ground.tscn" id="12_h4l78"]
+[ext_resource type="AudioStream" uid="uid://cj34xk1k70h1r" path="res://assets/audio/kenney/explosionCrunch_000.ogg" id="13_dgita"]
 [ext_resource type="Texture2D" uid="uid://cfl43v1rytq3x" path="res://assets/sprites/vignette.png" id="13_o4syf"]
 [ext_resource type="Shader" uid="uid://hk7eofwijlb2" path="res://shaders/crt_shader.tres" id="13_s3xhu"]
 [ext_resource type="AudioStream" uid="uid://boactc2pwxp56" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-edited.ogg" id="14_syjp0"]
+[ext_resource type="Texture2D" uid="uid://ce77h8mgw6vwe" path="res://shaders/clouds_big.tres" id="14_vfjxm"]
+[ext_resource type="Texture2D" uid="uid://py7sb73x1loj" path="res://shaders/clouds_small.tres" id="15_uryqc"]
 [ext_resource type="Script" path="res://scripts/scrap_generator.gd" id="16_icr88"]
 [ext_resource type="PackedScene" uid="uid://c8dw6h147t7hg" path="res://objects/scrap.tscn" id="17_3p33g"]
 [ext_resource type="PackedScene" uid="uid://bksld1p4dpxtm" path="res://objects/scrap_scan.tscn" id="18_8uqgm"]
+[ext_resource type="PackedScene" uid="uid://d0xt3y40yrlt4" path="res://objects/deposit_gold_low.tscn" id="19_u2gof"]
+[ext_resource type="Texture2D" uid="uid://263hgn0ysq46" path="res://shaders/clouds256.tres" id="22_tho72"]
+[ext_resource type="Texture2D" uid="uid://b587uvfb7ilhi" path="res://shaders/noise.tres" id="24_rp23n"]
+[ext_resource type="Script" path="res://scripts/auto_set_label.gd" id="25_wyw2w"]
+[ext_resource type="Script" path="res://scripts/shake_ui.gd" id="26_8b4na"]
+[ext_resource type="Texture2D" uid="uid://dtociutwjxbhl" path="res://assets/sprites/battery.png" id="26_hdkr1"]
+[ext_resource type="Texture2D" uid="uid://dygj2bf3e85w7" path="res://assets/sprites/HP.png" id="27_uneah"]
+[ext_resource type="Texture2D" uid="uid://b2yt7eqv0n8c6" path="res://assets/sprites/UI.png" id="31_q8a7k"]
 
-[sub_resource type="Gradient" id="Gradient_2xegu"]
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_86gtd"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ukv4t"]
-seamless = true
-color_ramp = SubResource("Gradient_2xegu")
-noise = SubResource("FastNoiseLite_86gtd")
-
-[sub_resource type="Gradient" id="Gradient_kpgoq"]
-colors = PackedColorArray(0, 0, 0, 0, 1, 1, 1, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_1yht1"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_7u4hm"]
-width = 256
-height = 256
-seamless = true
-color_ramp = SubResource("Gradient_kpgoq")
-noise = SubResource("FastNoiseLite_1yht1")
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ajicu"]
+streams_count = 1
+random_pitch = 1.2
+random_volume_offset_db = 2.0
+stream_0/stream = ExtResource("13_dgita")
+stream_0/weight = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ko13q"]
 shader = ExtResource("6_aipgl")
 shader_parameter/WorldPos = null
-shader_parameter/Clouds1 = SubResource("NoiseTexture2D_ukv4t")
-shader_parameter/Clouds2 = SubResource("NoiseTexture2D_7u4hm")
+shader_parameter/Clouds1 = ExtResource("14_vfjxm")
+shader_parameter/Clouds2 = ExtResource("15_uryqc")
 
 [sub_resource type="GDScript" id="GDScript_21mes"]
 script/source = "extends ColorRect
@@ -75,41 +71,28 @@ func _process(_delta):
 	global_position = %MainCharacter.global_position - offset
 "
 
-[sub_resource type="Gradient" id="Gradient_mt7cm"]
-colors = PackedColorArray(0, 0, 0, 0.196078, 0.772549, 0.772549, 0.772549, 0.588235)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_8e06e"]
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s44hc"]
-width = 256
-height = 256
-seamless = true
-color_ramp = SubResource("Gradient_mt7cm")
-noise = SubResource("FastNoiseLite_8e06e")
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fpsru"]
 shader = ExtResource("10_cx3xn")
 shader_parameter/WorldPos = null
-shader_parameter/Clouds1 = SubResource("NoiseTexture2D_s44hc")
+shader_parameter/Clouds1 = ExtResource("22_tho72")
 
-[sub_resource type="Gradient" id="Gradient_0o3pv"]
-offsets = PackedFloat32Array(0, 0.20979, 0.486014, 0.797203, 1)
-colors = PackedColorArray(1, 1, 0, 1, 1, 0, 0.301961, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1)
-
-[sub_resource type="FastNoiseLite" id="FastNoiseLite_0sdut"]
-noise_type = 5
-frequency = 1.0
-
-[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_sy2kd"]
-width = 128
-height = 128
-generate_mipmaps = false
-color_ramp = SubResource("Gradient_0o3pv")
-noise = SubResource("FastNoiseLite_0sdut")
+[sub_resource type="SpriteFrames" id="SpriteFrames_vf6dp"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("26_hdkr1")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": true,
+"name": &"default",
+"speed": 2.0
+}]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ibbbg"]
 shader = ExtResource("13_s3xhu")
-shader_parameter/Noise = SubResource("NoiseTexture2D_sy2kd")
+shader_parameter/Noise = ExtResource("24_rp23n")
 
 [node name="Main" type="Node"]
 script = ExtResource("1_jec0e")
@@ -120,6 +103,7 @@ extraction_drone = ExtResource("3_sdcrf")
 extraction_drone_price = 50
 status_label = ExtResource("4_cyim7")
 scrap_scan = ExtResource("18_8uqgm")
+gold_deposit = ExtResource("19_u2gof")
 
 [node name="UpgradeSystem" type="Node" parent="."]
 unique_name_in_owner = true
@@ -153,6 +137,11 @@ unique_name_in_owner = true
 stream = ExtResource("11_6ds5o")
 volume_db = -6.0
 bus = &"UI"
+
+[node name="ExplosionAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = SubResource("AudioStreamRandomizer_ajicu")
+bus = &"World"
 
 [node name="TimerBismuthine" type="Timer" parent="."]
 unique_name_in_owner = true
@@ -189,17 +178,20 @@ unique_name_in_owner = true
 layer = 5
 follow_viewport_enabled = true
 
-[node name="ScreenShakeCamera" type="Camera2D" parent="Above" node_paths=PackedStringArray("target_node")]
+[node name="ScreenShakeCamera" type="Camera2D" parent="Above" node_paths=PackedStringArray("target_node") groups=["MainCamera"]]
+unique_name_in_owner = true
 position = Vector2(642, 404)
 position_smoothing_enabled = true
 position_smoothing_speed = 3.0
 script = ExtResource("2_u5apd")
 target_node = NodePath("../MainCharacter")
+shake_factor = 50.0
 
 [node name="MainCharacter" parent="Above" groups=["MainCharacter"] instance=ExtResource("1_fk25x")]
 unique_name_in_owner = true
 z_index = 10
 position = Vector2(642, 404)
+rotation = 2.26544
 collision_mask = 3
 
 [node name="Radar" parent="Above" node_paths=PackedStringArray("target") instance=ExtResource("2_p4ckd")]
@@ -251,6 +243,7 @@ world_radar = NodePath("../Above/Radar")
 [node name="MainUI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
 layer = 16
+script = ExtResource("26_8b4na")
 
 [node name="ActionContainer" type="MarginContainer" parent="MainUI"]
 texture_filter = 2
@@ -259,8 +252,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -512.0
-offset_top = -256.0
+offset_left = -624.0
+offset_top = -288.0
+offset_right = -55.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset = Vector2(512, 256)
@@ -268,6 +263,26 @@ theme = ExtResource("12_dwlxs")
 
 [node name="ActionLabels" type="VBoxContainer" parent="MainUI/ActionContainer"]
 layout_mode = 2
+alignment = 2
+
+[node name="LabelHint" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+fit_content = true
+script = ExtResource("25_wyw2w")
+
+[node name="LabelMenu" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+bbcode_enabled = true
+text = "[color=lightgreen][zero][color=green] - Open menu & upgrades"
+fit_content = true
+script = ExtResource("25_wyw2w")
+constant_name = &"MENU_OPEN"
 
 [node name="LabelSampling" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
 unique_name_in_owner = true
@@ -276,30 +291,18 @@ layout_mode = 2
 bbcode_enabled = true
 text = "[color=lightgreen]E[color=green] - Send sampling drone [color=lightgreen]{20 Bi}"
 fit_content = true
+script = ExtResource("25_wyw2w")
+constant_name = &"DRONE_SAMPLING_MENU"
 
 [node name="LabelExtracting" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 bbcode_enabled = true
-text = "[color=lightgreen]R[color=green] - Send extraction drone [color=lightgreen]{50 Fe}"
+text = "[color=lightgreen]R[color=green] - Collect/drop extraction drone [color=lightgreen]{50 Fe}"
 fit_content = true
-
-[node name="LabelGrab" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=lightgreen]F[color=green] - Collect extraction drone"
-fit_content = true
-
-[node name="LabelMenu" type="RichTextLabel" parent="MainUI/ActionContainer/ActionLabels"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
-layout_mode = 2
-bbcode_enabled = true
-text = "[color=lightgreen][0][color=green] - Open menu & upgrades"
-fit_content = true
+script = ExtResource("25_wyw2w")
+constant_name = &"DRONE_EXTRACTION_MENU"
 
 [node name="StatusContainer" type="MarginContainer" parent="MainUI"]
 texture_filter = 2
@@ -308,9 +311,10 @@ anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -992.0
-offset_top = -265.0
-offset_right = -536.0
+offset_left = -969.0
+offset_top = -285.0
+offset_right = -636.0
+offset_bottom = -20.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset = Vector2(512, 256)
@@ -326,9 +330,10 @@ texture_filter = 2
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
-offset_left = -179.0
-offset_right = -30.0
-offset_bottom = 90.0
+offset_left = -249.0
+offset_top = 40.0
+offset_right = -100.0
+offset_bottom = 130.0
 grow_horizontal = 0
 size_flags_horizontal = 8
 size_flags_vertical = 0
@@ -353,12 +358,20 @@ bbcode_enabled = true
 text = "[right][color=green]2000 [color=lightgreen]Bi"
 fit_content = true
 
+[node name="BatterySprite" type="AnimatedSprite2D" parent="MainUI"]
+unique_name_in_owner = true
+texture_filter = 2
+position = Vector2(1196, 104)
+sprite_frames = SubResource("SpriteFrames_vf6dp")
+autoplay = "default"
+frame_progress = 0.132893
+
 [node name="LabelGold" type="RichTextLabel" parent="MainUI"]
 unique_name_in_owner = true
-offset_left = 903.0
-offset_top = 11.0
-offset_right = 1099.0
-offset_bottom = 101.0
+offset_left = 793.0
+offset_top = 51.0
+offset_right = 989.0
+offset_bottom = 141.0
 theme = ExtResource("12_dwlxs")
 theme_override_font_sizes/normal_font_size = 48
 bbcode_enabled = true
@@ -372,10 +385,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -433.0
-offset_top = -227.0
-offset_right = -14.0
-offset_bottom = 74.0
+offset_left = -455.0
+offset_top = -235.0
+offset_right = -36.0
+offset_bottom = 86.0
 grow_horizontal = 0
 grow_vertical = 2
 theme = ExtResource("12_dwlxs")
@@ -390,9 +403,9 @@ tab_size = 8
 [node name="UpgradeContainer" type="MarginContainer" parent="MainUI"]
 unique_name_in_owner = true
 visible = false
-offset_left = 119.0
+offset_left = 82.0
 offset_top = 27.0
-offset_right = 804.0
+offset_right = 767.0
 offset_bottom = 448.0
 theme = ExtResource("12_dwlxs")
 
@@ -476,10 +489,84 @@ radar audio
 feedback"
 fit_content = true
 
+[node name="HPContainer" type="MarginContainer" parent="MainUI"]
+offset_left = 290.0
+offset_top = 697.0
+offset_right = 990.0
+offset_bottom = 713.0
+
+[node name="HPBoxContainer" type="HBoxContainer" parent="MainUI/HPContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HP" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP2" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP3" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP4" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP5" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP6" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP7" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP8" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP9" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="HP10" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
+custom_minimum_size = Vector2(70, 16)
+layout_mode = 2
+texture = ExtResource("27_uneah")
+
+[node name="UIBorders" type="CanvasLayer" parent="."]
+unique_name_in_owner = true
+layer = 17
+script = ExtResource("26_8b4na")
+
+[node name="UIBorders" type="TextureRect" parent="UIBorders"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("31_q8a7k")
+
 [node name="CRT" type="CanvasLayer" parent="."]
 layer = 20
 
-[node name="TextureRect" type="TextureRect" parent="CRT"]
+[node name="UIVignette" type="TextureRect" parent="CRT"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -496,6 +583,8 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [connection signal="timeout" from="TimerBismuthine" to="." method="_on_timer_bismuthine_timeout"]
+[connection signal="player_entered_area" from="Ground" to="." method="_on_ground_player_entered_area"]
+[connection signal="player_exited_area" from="Ground" to="." method="_on_ground_player_exited_area"]
 [connection signal="collected_scrap" from="Above/MainCharacter" to="." method="_on_main_character_collected_scrap"]
 [connection signal="collected_scrap" from="Above/MainCharacter" to="ScrapAudio" method="play" unbinds=1]
 [connection signal="timeout" from="Above/ScrapGeneratorPath/ScrapGenerator/GeneratorTimer" to="Above/ScrapGeneratorPath/ScrapGenerator" method="_on_generator_timer_timeout"]

@@ -23,9 +23,11 @@ point_count = 4
 curve = SubResource("Curve_jrjes")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_dkq2r"]
+emission_shape = 1
+emission_sphere_radius = 5.0
 particle_flag_disable_z = true
 direction = Vector3(0, 1, 0)
-spread = 15.0
+spread = 30.0
 gravity = Vector3(0, 0, 0)
 initial_velocity_min = 10.0
 initial_velocity_max = 30.0
@@ -43,8 +45,9 @@ color_ramp = SubResource("GradientTexture1D_ylyty")
 hue_variation_min = -0.01
 hue_variation_max = 0.01
 
-[node name="MainCharacter" type="Area2D"]
+[node name="MainCharacter" type="Area2D" groups=["Teleportable"]]
 texture_filter = 1
+collision_layer = 17
 collision_mask = 5
 script = ExtResource("1_lfxkg")
 acceleration = 75.0
@@ -65,7 +68,7 @@ shape = SubResource("CapsuleShape2D_5cqbh")
 [node name="GPUParticles2D" type="GPUParticles2D" parent="."]
 unique_name_in_owner = true
 emitting = false
-amount = 20
+amount = 30
 process_material = SubResource("ParticleProcessMaterial_dkq2r")
 lifetime = 10.0
 randomness = 0.3

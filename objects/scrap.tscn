@@ -6,7 +6,7 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_6hshu"]
 radius = 30.0167
 
-[node name="Scrap" type="Area2D"]
+[node name="Scrap" type="Area2D" groups=["Teleportable"]]
 position = Vector2(514, 181)
 collision_layer = 6
 collision_mask = 0

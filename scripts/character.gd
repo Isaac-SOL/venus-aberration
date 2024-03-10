@@ -10,10 +10,7 @@ signal collected_scrap(value: int)
 var speed := Vector2(0, 0)
 var rot_speed: float = 0
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
+static var static_pos: Vector2
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -37,6 +34,9 @@ func _process(delta):
 	position += speed * delta
 	rotation += rot_speed * delta
 	
+	# Save publicly-accessible position
+	static_pos = position
+	
 	# Audio
 	%EngineAudio.pitch_scale = lerpf(0.01, 1, speed.length() / 100)
 
@@ -44,3 +44,6 @@ func _on_area_entered(area):
 	if area is Scrap:
 		collected_scrap.emit(area.value)
 		area.queue_free()
+
+func add_speed(velocity: Vector2):
+	speed += velocity

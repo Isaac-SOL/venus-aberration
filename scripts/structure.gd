@@ -5,6 +5,9 @@ class_name Structure extends Area2D
 var block_evolution: bool = false
 var level: int = 0
 var child_deposits: Array[Deposit] = []
+var small_destruction: bool = true
+
+static var global_level: int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -24,20 +27,39 @@ func wake_up():
 		print(str(self), " woke up")
 
 func increase_level_to(lv: int):
-	if lv > level:
-		level = lv
-	
 	if block_evolution:
 		return
-	
-	match level:
-		1:
-			print(str(self), " starting blink mode")
-			%AnimationPlayer.play("single_blink")
-			for child in child_deposits:
-				child.remove_all(["gold"])
-			
+	if lv > level:
+		level = lv
+		global_level = lv
+		
+		match level:
+			1:
+				print(str(self), " starting blink mode")
+				%AnimationPlayer.play("single_blink")
+				for child in child_deposits:
+					child.remove_all(["gold"])
+			2:
+				print(str(self), " starting SUPER blink mode")
+				%AnimationPlayer.play("multi_blink", 1)
+				for child in child_deposits:
+					child.remove_all(["gold"])
 
 func _on_deposit_warehouse_start_extracting():
 	block_evolution = true
 	get_tree().call_group("Structures", "increase_level_to", 1)
+
+func causes_extinction() -> bool:
+	return level == 1
+
+func caused_extinction():
+	get_tree().call_group("Structures", "increase_level_to", 2)
+
+func causes_destruction() -> bool:
+	return level == 2 and small_destruction
+
+func caused_destruction():
+	small_destruction = false
+
+func causes_big_destruction() -> bool:
+	return level == 2 and not small_destruction

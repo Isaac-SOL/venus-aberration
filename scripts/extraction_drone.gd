@@ -85,6 +85,20 @@ func set_drilling_audio(do_set: bool):
 	if not do_set:
 		tween.tween_callback(%DrillingAudio.stop)
 
+func is_on_structure_causing_extinction() -> bool:
+	for area in %Scanner.get_overlapping_areas():
+		if area is Structure && area.causes_extinction():
+			area.caused_extinction()
+			return true
+	return false
+
+func is_on_structure_causing_destruction() -> bool:
+	for area in %Scanner.get_overlapping_areas():
+		if area is Structure && area.causes_destruction():
+			area.caused_destruction()
+			return true
+	return false
+
 func grab():
 	grabbed.emit()
 	disappear()
@@ -94,3 +108,9 @@ func disappear():
 
 func blink():
 	%AnimationPlayer.play("blink")
+
+func destroy_slow():
+	%AnimationPlayer.play("destroy_slow")
+
+func destroy_immediate():
+	queue_free()

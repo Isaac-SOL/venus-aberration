@@ -9,6 +9,7 @@ class_name Main extends Node
 @export var extraction_drone_price: int = 100
 @export var status_label: PackedScene
 @export var scrap_scan: PackedScene
+@export var gold_deposit: PackedScene
 
 var drone_out: bool = false
 var can_send_or_stop_sample: bool = true
@@ -22,19 +23,75 @@ var can_open_menu: bool = true
 var menu_open: bool = false
 var extraction_factor: float = 1
 var galena_extraction: bool = false
+var hint_queue: Array[Tween] = []
+var hint_explore_extract_given: bool = false
+var hint_sampling_given: bool = false
+var hint_gold_given: bool = false
+
+const MENU_CLOSE :=           "[color=lightgreen][zero][color=green] - Close menu & upgrades"
+const MENU_OPEN :=            "[color=lightgreen][zero][color=green] - Open menu & upgrades"
+const MENU_OPEN_ATTENTION :=  "[color=lightgreen][zero][color=yellow] - Open menu & upgrades"
+
+const RADAR_AUDIO_INCREASE := "[center][color=lightgreen][9] [color=green]increase\nradar audio\nfeedback"
+const RADAR_AUDIO_DECREASE := "[center][color=lightgreen][9] [color=green]decrease\nradar audio\nfeedback"
+
+const DRONE_SAMPLING_MENU :=      "[color=lightgreen]E[color=green] - Drop sampling drone [color=lightgreen]{20 Bi}"
+const DRONE_SAMPLING_DROPPING :=  "Dropping sampling drone..."
+const DRONE_SAMPLING_SEARCHING := "Sampling drone landed, detecting nearby deposits..."
+const DRONE_SAMPLING_FOUND :=     "Deposit found, extracting sample..."
+const DRONE_SAMPLING_NOT_FOUND := "No deposits found"
+const DRONE_SAMPLING_SHOWING :=   "Now showing core sample data"
+const DRONE_SAMPLING_DISMISS :=   "[color=lightgreen]E[color=green] - Dismiss core sample info"
+const DRONE_SAMPLING_LOST :=      "Lost connection with drone"
+
+const DRONE_EXTRACTION_MENU :=         "[color=lightgreen]R[color=green] - Drop/Collect extraction drone [color=lightgreen]{50 Fe}"
+const DRONE_EXTRACTION_DROPPED :=      "Extraction drone dropped"
+const DRONE_EXTRACTION_DROPPING :=     "Dropping extraction drone..."
+const DRONE_EXTRACTION_LANDED :=       "Drone landed, detecting nearby suitable deposits..."
+const DRONE_EXTRACTION_FOUND :=        "Found deposit, moving..."
+const DRONE_EXTRACTION_NOT_FOUND :=    "No deposits found, self-destructing..."
+const DRONE_EXTRACTION_NOT_FOUND_2 :=  "No more deposits found, awaiting collection by aircraft"
+const DRONE_EXTRACTION_EXTRACTING :=   "Deposit reached, extracting..."
+const DRONE_EXTRACTION_SEARCHING :=    "Deposit extracted, looking for new deposits..."
+const DRONE_EXTRACTION_CANT_DROP :=    "Cannot drop extraction drone: no room"
+const DRONE_EXTRACTION_COLLECT :=      "Collected extraction drone"
+const DRONE_EXTRACTION_CANT_COLLECT := "Collect failed: No awaiting extraction drone under aircraft"
+const DRONE_EXTRACTION_LOST :=         "Lost connection with drone"
+
+const HINT_FLOATING_SCRAP :=  "Grab the floating scrap\nto get iron (Fe)"
+const HINT_RADAR_DRONES :=    "The radar detects ground deposits\nUse drones to analyze and extract"
+const HINT_SAMPLING :=        "Use the sampling drone to check\nif a deposit is worth extracting"
+const HINT_EXTRACT_EXPLORE := "You may explore while waiting\nfor the drone to finish extracting"
+const HINT_USE_IRON :=        "Find iron (Fe) to upgrade\nand bismuthine (Bi) to refuel"
+const HINT_FIND_GOLD :=       "Find as much gold (Au) as possible\nbefore running out of fuel (Bi)"
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	update_counts()
+	await seconds(5)
+	await seconds(20)
+	queue_hint(HINT_FLOATING_SCRAP)
+	spawn_leading_gold()
+
+func spawn_leading_gold():
+	await seconds(250)
+	while true:
+		await seconds(180)
+		if Structure.global_level >= 1:
+			break
+		var new_deposit: Deposit = gold_deposit.instantiate()
+		new_deposit.global_position = PlayerCharacter.static_pos + Vector2(600, 330)
+		%Ground.add_child(new_deposit)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
+	# Manage hints
+	hint_player()
+	
 	if Input.is_action_just_pressed("send_drone") && can_send_or_stop_sample:
 		spawn_sampling_drone()
 	elif Input.is_action_just_pressed("send_extraction") && can_send_extraction:
 		spawn_extraction_drone()
-	elif Input.is_action_just_pressed("grab_extraction") && can_grab_extraction:
-		grab_extraction_drone()
 	elif Input.is_action_just_pressed("open_menu") && can_open_menu:
 		open_upgrade_menu(not menu_open)
 		%UIAudio.play()
@@ -44,6 +101,8 @@ func _process(_delta):
 				if %UpgradeSystem.is_upgrade_valid(i, iron):
 					add_iron(-%UpgradeSystem.get_upgrade_price(i))
 					%UpgradeSystem.perform_upgrade(i)
+					if i == 0 and %UpgradeSystem.get_upgrade_level(0) == 1:
+						queue_hint(HINT_RADAR_DRONES)
 					open_upgrade_menu(false)
 					%UpgradeAudio.play()
 				elif i == 8 and %RadarUI.is_active():
@@ -55,6 +114,15 @@ func _process(_delta):
 		if Input.is_action_just_pressed("debug_bismuthine"):
 			bismuthine += 100
 			update_counts()
+
+func hint_player():
+	if hint_queue.size() > 0:
+		if not hint_queue[0].is_valid() or hint_queue[0].get_loops_left() == 0:
+			hint_queue.remove_at(0)
+			if hint_queue.size() > 0:
+				hint_queue[0].play()
+		elif not hint_queue[0].is_running():
+			hint_queue[0].play()
 
 func spawn_sampling_drone():
 	if not drone_out && bismuthine >= sampling_drone_price:
@@ -74,7 +142,19 @@ func spawn_sampling_drone():
 		reset_sampling_message()
 
 func spawn_extraction_drone():
+	var room := true
+	# Attempt grabbing a drone
+	for area in %MainCharacter.get_overlapping_areas():
+		if area is ExtractionDrone:
+			if area.ready_for_grab:
+				extraction_grab_routine(area)
+				return
+			room = false
+	# If there was no drone, drop one
 	if iron >= extraction_drone_price:
+		if not room:
+			extraction_send_fail_routine()
+			return
 		add_iron(-extraction_drone_price)
 		out_extractions.append(extraction_drone.instantiate())
 		out_extractions[-1].global_position = %MainCharacter.global_position
@@ -103,17 +183,17 @@ func open_upgrade_menu(open: bool):
 	if open:
 		menu_open = true
 		%UpgradeContainer.visible = true
-		%LabelMenu.text = "[color=lightgreen][0][color=green] - Close menu & upgrades"
+		%LabelMenu.text = MENU_CLOSE
 		can_open_menu = false
 		for i in range(%UpgradeFlowContainer.get_child_count()):
 			%UpgradeFlowContainer.get_child(i).text = ""
-			var inc_dec: String = "increase" if %RadarUI.is_lower() else "decrease"
-			var message: String = %UpgradeSystem.get_upgrade_text(i) if i < 8 else "[center][color=lightgreen][9] [color=green]" + inc_dec +"\nradar audio\nfeedback" if %RadarUI.is_active() else ""
+			var audio_message: String = RADAR_AUDIO_INCREASE if %RadarUI.is_lower() else RADAR_AUDIO_DECREASE
+			var message: String = %UpgradeSystem.get_upgrade_text(i) if i < 8 else audio_message if %RadarUI.is_active() else ""
 			show_message_slow_later(0.1, 0.5, %UpgradeFlowContainer.get_child(i), message, 0.02, "")
 		await seconds(2.5)
 		can_open_menu = true
 	else:
-		%LabelMenu.text = "[color=lightgreen][0][color=green] - Open menu & upgrades"
+		%LabelMenu.text = MENU_OPEN
 		%UpgradeContainer.visible = false
 		menu_open = false
 
@@ -126,6 +206,8 @@ func update_counts():
 	else: bis_color = "[color=red]"
 	%LabelBismuthine.text = "[right]" + bis_color + str(bismuthine) + " [color=lightgreen]Bi"
 	%LabelGold.text = "[right][color=green]" + str(gold) + " [color=lightgreen]Au"
+	if not menu_open and %UpgradeSystem.get_upgrade_level(0) == 0 and iron >= %UpgradeSystem.get_upgrade_price(0):
+		%LabelMenu.text = MENU_OPEN_ATTENTION
 
 func seconds(t: float, t2: float = -1):
 	if t2 > 0:
@@ -146,12 +228,27 @@ func show_message_slow(label: RichTextLabel, message: String, char_time: float, 
 				label.text = new_text
 			await seconds(char_time)
 
+func show_hint(message: String):
+	show_message_slow(%LabelHint, "[center][color=yellow]" + message, 0.05, "")
+
+func queue_hint(message: String):
+	var tween = create_tween()
+	tween.tween_callback(func(): show_hint(message))
+	tween.tween_interval(20)
+	tween.tween_callback(func(): %LabelHint.text = "")
+	tween.pause()
+	hint_queue.append(tween)
+
+func queue_hint_later(message: String, wait: float):
+	await seconds(wait)
+	queue_hint(message)
+
 func show_message_slow_later(t1: float, t2: float, label: RichTextLabel, message: String, char_time: float, color: String = "green"):
 	await seconds(t1, t2)
 	show_message_slow(label, message, char_time, color)
 
 func reset_sampling_message():
-	show_message_slow(%LabelSampling, "[color=lightgreen]E[color=green] - Send sampling drone [color=lightgreen]{20 Bi}", 0.01)
+	show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
 
 func show_deposit_info(deposit: Deposit):
 	var text_base: String = "Sample Composition:\n"
@@ -163,29 +260,44 @@ func show_deposit_info(deposit: Deposit):
 		elif key_name == "gold": key_name = "gold (au)"
 		text_base += "- " + str(comp[key]) + "%\t" + key_name + "\n"
 	var amount: int = deposit.get_total_amount()
-	if amount < 450: text_base += "Low Amount"
-	elif amount < 700: text_base += "Avg Amount"
+	if amount < 400: text_base += "Low Amount"
+	elif amount < 600: text_base += "Avg Amount"
 	else: text_base += "High Amount"
 	show_message_slow(%LabelSampleResults, text_base, 0.01)
 
 func sampling_routine(drone: SamplingDrone):
 	drone_out = true
-	show_message_slow(%LabelSampling, "Sending drone...", 0.1)
+	show_message_slow(%LabelSampling, DRONE_SAMPLING_DROPPING, 0.05)
 	await seconds(4)
-	show_message_slow(%LabelSampling, "Drone landed, detecting nearby deposits...", 0.01)
+	show_message_slow(%LabelSampling, DRONE_SAMPLING_SEARCHING, 0.01)
+	
+	if(drone.is_on_structure_causing_extinction()):
+		await seconds(3)
+		drone.destroy_slow()
+		await seconds(7)
+		drone_out = false
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_LOST, 0.03, "red")
+		await seconds(7)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
+		can_send_or_stop_sample = true
+		return
+	
 	var deposit: Deposit = drone.find_deposit()
 	if deposit:
 		await seconds(3, 6)
-		show_message_slow(%LabelSampling, "Deposit found, extracting sample...", 0.05)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_FOUND, 0.05)
 		await seconds(4)
-		show_message_slow(%LabelSampling, "Now showing core sample data", 0.05)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_SHOWING, 0.05)
 		show_deposit_info(deposit)
+		if not hint_sampling_given:
+			hint_sampling_given = true
+			queue_hint(HINT_SAMPLING)
 		await seconds(5)
-		%LabelSampling.text = "[color=lightgreen]E[color=green] - Dismiss core sample info"
+		%LabelSampling.text = DRONE_SAMPLING_DISMISS
 		showing_deposit_info = true
 	else:
 		await seconds(5, 10)
-		show_message_slow(%LabelSampling, "No deposits found", 0.1)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_NOT_FOUND, 0.1)
 		await seconds(5)
 		drone.disappear()
 		drone_out = false
@@ -194,49 +306,83 @@ func sampling_routine(drone: SamplingDrone):
 
 func extraction_sent_message():
 	can_send_extraction = false
-	show_message_slow(%LabelExtracting, "Extraction drone sent", 0.1)
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_DROPPED, 0.1)
 	await seconds(5)
-	show_message_slow(%LabelExtracting, "[color=lightgreen]R[color=green] - Send extraction drone [color=lightgreen]{50 Fe}", 0.01)
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_MENU, 0.01)
 	await seconds(1)
 	can_send_extraction = true
 
 func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 	var id_head: String = "[" + str(drone.id) + "] "
-	show_message_slow(label, id_head + "Sending drone...", 0.1)
+	show_message_slow(label, id_head + DRONE_EXTRACTION_DROPPING, 0.06)
 	await seconds(4)
-	show_message_slow(label, id_head + "Drone landed, detecting nearby suitable deposits...", 0.05)
+	show_message_slow(label, id_head + DRONE_EXTRACTION_LANDED, 0.05)
+	
+	if(drone.is_on_structure_causing_extinction()):
+		await seconds(3)
+		drone.destroy_slow()
+		await seconds(7)
+		show_message_slow(label, id_head + DRONE_EXTRACTION_LOST, 0.03, "red")
+		await seconds(7)
+		label.queue_free()
+		return
+	
 	var deposit: Deposit = drone.find_deposit()
 	while deposit:
 		await seconds(3, 8)
-		show_message_slow(label, id_head + "Found deposit, moving...", 0.01)
+		show_message_slow(label, id_head + DRONE_EXTRACTION_FOUND, 0.01)
 		drone.move_toward_deposit(deposit)
 		await drone.finished_moving
-		show_message_slow(label, id_head + "Deposit reached, extracting...", 0.01)
+		show_message_slow(label, id_head + DRONE_EXTRACTION_EXTRACTING, 0.01)
 		drone.set_drilling_audio(true)
 		drone.extract_deposit(deposit)
+		if not hint_explore_extract_given:
+			queue_hint(HINT_EXTRACT_EXPLORE)
+			hint_explore_extract_given = true
+			%UpgradeSystem.allow_extraction_upgrades = true
+		
+		if(drone.is_on_structure_causing_destruction()):
+			await seconds(3)
+			%MainCharacter.add_speed((%MainCharacter.global_position - drone.global_position).normalized() * 500)
+			screen_shake(2, 1.5)
+			%ExplosionAudio.play()
+			drone.destroy_immediate()
+			show_message_slow(label, id_head + DRONE_EXTRACTION_LOST, 0.03, "red")
+			await seconds(7)
+			label.queue_free()
+			return
+		
 		await drone.finished_extracting
-		show_message_slow(label, id_head + "Deposit extracted, looking for new deposits...", 0.04)
+		show_message_slow(label, id_head + DRONE_EXTRACTION_SEARCHING, 0.04)
 		drone.set_drilling_audio(false)
 		deposit = drone.find_deposit()
 	await seconds(6, 15)
 	if drone.is_empty():
-		show_message_slow(label, id_head + "No deposits found, self-destroying...", 0.04, "yellow")
+		show_message_slow(label, id_head + DRONE_EXTRACTION_NOT_FOUND, 0.04, "yellow")
 		await seconds(5)
 		drone.disappear()
 	else:
-		show_message_slow(label, id_head + "No more deposits found, awaiting collection by aircraft", 0.04, "yellow")
+		show_message_slow(label, id_head + DRONE_EXTRACTION_NOT_FOUND_2, 0.04, "yellow")
 		drone.ready_for_grab = true
 		drone.blink()
 		await drone.grabbed
 	label.queue_free()
 
-func extraction_fail_routine():
-	can_grab_extraction = false
-	show_message_slow(%LabelGrab, "Grab failed: No awaiting extraction drone under aircraft", 0.03, "red")
+func extraction_send_fail_routine():
+	can_send_extraction = false
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_CANT_DROP, 0.03, "red")
 	await seconds(5)
-	show_message_slow(%LabelGrab, "[color=lightgreen]F[color=green] - Collect extraction drone", 0.01)
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_MENU, 0.01)
 	await seconds(1)
-	can_grab_extraction = true
+	can_send_extraction = true
+
+func extraction_fail_routine():
+	can_send_extraction = false
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_CANT_COLLECT, 0.03, "red")
+	await seconds(5)
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_MENU, 0.01)
+	await seconds(1)
+	can_send_extraction = true
 
 func extraction_grab_routine(drone: ExtractionDrone):
 	var grab_results: String = "[color=yellow]"
@@ -252,12 +398,17 @@ func extraction_grab_routine(drone: ExtractionDrone):
 		grab_results += "[" + str(content["gold"]) + " Au] "
 	update_counts()
 	drone.grab()
-	can_grab_extraction = false
-	show_message_slow(%LabelGrab, "Grabbed extraction drone\n" + grab_results, 0.04, "green")
+	can_send_extraction = false
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_COLLECT + "\n" + grab_results, 0.04, "green")
 	await seconds(8)
-	show_message_slow(%LabelGrab, "[color=lightgreen]F[color=green] - Collect extraction drone", 0.01)
+	show_message_slow(%LabelExtracting, DRONE_EXTRACTION_MENU, 0.01)
 	await seconds(1)
-	can_grab_extraction = true
+	can_send_extraction = true
+	if not hint_gold_given and "iron" in content:
+		hint_gold_given = true
+		await seconds(10)
+		queue_hint(HINT_USE_IRON)
+		queue_hint(HINT_FIND_GOLD)
 
 func make_scan(follow_node: Node2D, text: String) -> Node2D:
 	var new_scan: Node2D = scrap_scan.instantiate()
@@ -279,6 +430,12 @@ func add_gold(value: int):
 	gold += value
 	update_counts()
 
+func screen_shake(amount: float, time: float):
+	%ScreenShakeCamera.screen_shake(amount, time)
+	%RadarUI.screen_shake(amount, time)
+	%MainUI.screen_shake(amount, time)
+	%UIBorders.screen_shake(amount, time)
+
 func _on_timer_bismuthine_timeout():
 	bismuthine -= 1
 	update_counts()
@@ -290,3 +447,11 @@ func _on_timer_bismuthine_timeout():
 func _on_main_character_collected_scrap(value):
 	iron += value
 	update_counts()
+
+
+func _on_ground_player_exited_area():
+	%RadarUI.set_arrow_active(true)
+
+
+func _on_ground_player_entered_area():
+	%RadarUI.set_arrow_active(false)
