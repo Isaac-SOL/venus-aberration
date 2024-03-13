@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=53 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -35,7 +35,10 @@
 [ext_resource type="Script" path="res://scripts/auto_set_label.gd" id="25_wyw2w"]
 [ext_resource type="Script" path="res://scripts/shake_ui.gd" id="26_8b4na"]
 [ext_resource type="Texture2D" uid="uid://dtociutwjxbhl" path="res://assets/sprites/battery.png" id="26_hdkr1"]
+[ext_resource type="Texture2D" uid="uid://cl5auhvxq01ug" path="res://assets/sprites/scrap_small.png" id="26_j4tyx"]
+[ext_resource type="Texture2D" uid="uid://xpiq7ve6ixm3" path="res://assets/sprites/scrap_mid.png" id="27_efxg2"]
 [ext_resource type="Texture2D" uid="uid://dygj2bf3e85w7" path="res://assets/sprites/HP.png" id="27_uneah"]
+[ext_resource type="Texture2D" uid="uid://ldjeoitsunlu" path="res://assets/sprites/scrap.png" id="28_pxt8m"]
 [ext_resource type="Script" path="res://scripts/hp_box_container.gd" id="31_pqhrc"]
 [ext_resource type="Texture2D" uid="uid://b2yt7eqv0n8c6" path="res://assets/sprites/UI.png" id="31_q8a7k"]
 [ext_resource type="PackedScene" uid="uid://dtbcty7n7y7qk" path="res://objects/hp.tscn" id="33_2dfqc"]
@@ -247,6 +250,7 @@ script = ExtResource("16_icr88")
 scrap = ExtResource("17_3p33g")
 scrap_scan = ExtResource("18_8uqgm")
 time = Vector2(16, 80)
+scrap_sprites = Array[Texture2D]([ExtResource("26_j4tyx"), ExtResource("27_efxg2"), ExtResource("28_pxt8m")])
 
 [node name="GeneratorTimer" type="Timer" parent="Above/ScrapGeneratorPath/ScrapGenerator"]
 process_callback = 0

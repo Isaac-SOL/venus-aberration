@@ -11,3 +11,6 @@ func _process(delta):
 
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	queue_free()
+
+func set_sprite(new_sprite: Texture2D):
+	%Sprite.texture = new_sprite

@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=6 format=3 uid="uid://dsdwsweihwdvt"]
+[gd_resource type="AudioBusLayout" load_steps=8 format=3 uid="uid://dsdwsweihwdvt"]
 
 [sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_4d77k"]
 resource_name = "LowPassFilter"
@@ -27,6 +27,15 @@ damping = 0.33
 hipass = 0.12
 dry = 0.5
 wet = 1.0
+
+[sub_resource type="AudioEffectChorus" id="AudioEffectChorus_et1mx"]
+resource_name = "Chorus"
+dry = 0.0
+
+[sub_resource type="AudioEffectReverb" id="AudioEffectReverb_28e36"]
+resource_name = "Reverb"
+room_size = 1.0
+dry = 0.0
 
 [resource]
 bus/1/name = &"Radar"
@@ -63,3 +72,13 @@ bus/4/volume_db = 0.0672607
 bus/4/send = &"World"
 bus/4/effect/0/effect = SubResource("AudioEffectReverb_c88fc")
 bus/4/effect/0/enabled = true
+bus/5/name = &"Structures"
+bus/5/solo = false
+bus/5/mute = false
+bus/5/bypass_fx = false
+bus/5/volume_db = 0.0
+bus/5/send = &"World"
+bus/5/effect/0/effect = SubResource("AudioEffectChorus_et1mx")
+bus/5/effect/0/enabled = true
+bus/5/effect/1/effect = SubResource("AudioEffectReverb_28e36")
+bus/5/effect/1/enabled = true

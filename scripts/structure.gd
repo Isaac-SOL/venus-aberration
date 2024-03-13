@@ -39,6 +39,7 @@ func increase_level_to(lv: int):
 				%AnimationPlayer.play("single_blink")
 				for child in child_deposits:
 					child.remove_all(["gold"])
+				%AudioTimer.start()
 			2:
 				print(str(self), " starting SUPER blink mode")
 				%AnimationPlayer.play("multi_blink", 1)
