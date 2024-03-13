@@ -12,7 +12,7 @@ var direction: Vector2
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	super._ready()
-	direction = (Vector2(8000, 6000) - global_position).normalized() * speed
+	direction = (Vector2(8000, 6000) - global_position).normalized()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -23,7 +23,7 @@ func _process(delta):
 		blink_progress -= 1
 		get_tree().get_first_node_in_group("RadarUI").force_response(global_position, [dot_color, 3, false])
 	if noticed:
-		position += direction * delta
+		position += direction * delta * speed
 		speed *= 1.02
 
 func _on_visible_on_screen_notifier_2d_screen_exited():

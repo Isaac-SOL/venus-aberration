@@ -13,6 +13,7 @@ script = ExtResource("1_m55tb")
 [node name="FuriousDot" parent="." instance=ExtResource("3_1w666")]
 
 [node name="Danger" parent="." instance=ExtResource("4_85au3")]
+sleeping = true
 
 [connection signal="mystery_found" from="BigWalkingThing" to="." method="_on_mystery_found"]
 [connection signal="mystery_found" from="FuriousDot" to="." method="_on_mystery_found"]

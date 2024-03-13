@@ -62,6 +62,8 @@ func causes_destruction() -> bool:
 func caused_destruction():
 	if not block_evolution:
 		small_destruction = false
+		print(str(self), " starting MEGA blink mode")
+		%AnimationPlayer.play("mega_blink", 1)
 
 func causes_big_destruction() -> bool:
 	return level == 2 and not small_destruction

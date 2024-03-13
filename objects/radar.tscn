@@ -20,7 +20,7 @@ points = PackedVector2Array(0, 0, -100, 1440, 100, 1440)
 gradient = SubResource("Gradient_jwrh2")
 width = 720
 
-[node name="ShapeCast2D" type="ShapeCast2D"]
+[node name="ShapeCast2D" type="ShapeCast2D" groups=["Radar"]]
 shape = SubResource("ConvexPolygonShape2D_e30a0")
 target_position = Vector2(0, 0)
 collision_mask = 2

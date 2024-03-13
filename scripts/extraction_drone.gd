@@ -14,6 +14,9 @@ var mined_metals: Array[String] = ["iron", "bismuthine", "gold"]
 var ready_for_grab: bool = false
 var extraction_factor: float = 1
 
+func _ready():
+	get_tree().get_first_node_in_group("RadarUI").add_tracked_drone(self)
+
 func _process(delta):
 	super._process(delta)
 	if moving:
@@ -62,6 +65,21 @@ func add_metal(metal: String):
 	else:
 		contains[metal] = 1
 
+func get_eta_secs(deposit: Deposit) -> float:
+	var eta: float = 0
+	for metal in deposit.composition:
+		if metal in mined_metals:
+			eta += lerp(0.1, 0.4 * (1 / extraction_factor), 0.5) * deposit.composition[metal]
+	return eta
+
+func get_eta_string(deposit: Deposit) -> String:
+	var eta: float = get_eta_secs(deposit)
+	var eta_int: int = floori(eta)
+	var eta_secs: String = str(eta_int % 60)
+	if eta_secs.length() == 1:
+		eta_secs = "0" + eta_secs
+	return str(eta_int / 60) + ":" + eta_secs
+
 func extract_deposit(deposit: Deposit):
 	print("Starting extraction : ", str(deposit.get_composition()))
 	while deposit.contains(mined_metals):
@@ -99,6 +117,12 @@ func is_on_structure_causing_destruction() -> bool:
 			return true
 	return false
 
+func is_on_structure_causing_big_destruction() -> bool:
+	for area in %Scanner.get_overlapping_areas():
+		if (area is Structure or area is DroneKiller) && area.causes_big_destruction():
+			return true
+	return false
+
 func grab():
 	grabbed.emit()
 	disappear()
@@ -113,4 +137,5 @@ func destroy_slow():
 	%AnimationPlayer.play("destroy_slow")
 
 func destroy_immediate():
+	get_tree().get_first_node_in_group("RadarUI").remove_tracked_drone(self)
 	queue_free()

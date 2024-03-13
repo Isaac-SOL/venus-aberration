@@ -1,8 +1,9 @@
-[gd_scene load_steps=10 format=3 uid="uid://crxubcsmyb2mt"]
+[gd_scene load_steps=11 format=3 uid="uid://crxubcsmyb2mt"]
 
 [ext_resource type="Texture2D" uid="uid://brj780utw13on" path="res://assets/sprites/kenney/ship_0023.png" id="1_dyifn"]
 [ext_resource type="Script" path="res://scripts/character.gd" id="1_lfxkg"]
 [ext_resource type="AudioStream" uid="uid://c7ts4rxxvcoum" path="res://assets/audio/446120__justinvoke__engine-loop-4.ogg" id="3_m406k"]
+[ext_resource type="AudioStream" uid="uid://bdjjlw72i6dux" path="res://assets/audio/kenney/tone1_looped.ogg" id="4_84pe2"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5cqbh"]
 radius = 16.0
@@ -80,5 +81,11 @@ volume_db = -15.0
 pitch_scale = 0.01
 autoplay = true
 bus = &"World"
+
+[node name="BeepAudio" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_84pe2")
+volume_db = -12.0
+bus = &"Beep"
 
 [connection signal="area_entered" from="." to="." method="_on_area_entered"]

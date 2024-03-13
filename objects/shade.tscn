@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://dhgb7mbmjfko2"]
+[gd_scene load_steps=6 format=3 uid="uid://dhgb7mbmjfko2"]
 
 [ext_resource type="Script" path="res://scripts/danger.gd" id="1_lbhu5"]
 [ext_resource type="Texture2D" uid="uid://cqhtlqknar3dy" path="res://assets/sprites/lamp.png" id="2_28kek"]
+[ext_resource type="AudioStream" uid="uid://tct8s7lvite" path="res://assets/audio/262604__erictuten__wind-through-a-pipe_edited.ogg" id="4_5faya"]
 [ext_resource type="Texture2D" uid="uid://dwkqa3muabl43" path="res://assets/sprites/dot.png" id="4_pij4g"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_c141a"]
@@ -13,6 +14,7 @@ collision_layer = 0
 collision_mask = 16
 script = ExtResource("1_lbhu5")
 max_speed = 150.0
+max_audio_pitch_scale = 1.2
 cause_extinction = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -33,6 +35,15 @@ texture = ExtResource("4_pij4g")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 rect = Rect2(-50, -50, 100, 100)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("4_5faya")
+volume_db = 6.0
+autoplay = true
+max_distance = 500.0
+panning_strength = 2.0
+bus = &"World"
 
 [node name="FlyTimer" type="Timer" parent="."]
 unique_name_in_owner = true

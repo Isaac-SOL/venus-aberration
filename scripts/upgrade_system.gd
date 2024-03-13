@@ -42,16 +42,16 @@ const upgrades: Array[Array] = [
 		{
 			title = "upgrade\nspeed",
 			message = "+ 50% speed",
-			price = 150
+			price = 200
 		},
 		{
 			title = "upgrade\nspeed",
 			message = "+ 50% speed",
-			price = 250
+			price = 300
 		},
 		{
 			title = "upgrade\nspeed",
-			message = "+ 50% speed",
+			message = "+ 20% speed",
 			price = 500
 		}
 	],
@@ -59,12 +59,7 @@ const upgrades: Array[Array] = [
 		{
 			title = "upgrade\nengine eff.",
 			message = "- 50% Bi/sec",
-			price = 200
-		},
-		{
-			title = "upgrade\nengine eff.",
-			message = "- 50% Bi/sec",
-			price = 500
+			price = 250
 		},
 	],
 	[
@@ -161,6 +156,8 @@ func perform_upgrade(pos: int):
 		[1, _]:
 			%Radar.set_shape_level(levels[pos] + 1)
 			%RadarUI.set_radar_level(levels[pos] + 1)
+		[2, 3]:
+			%MainCharacter.acceleration *= 1.2
 		[2, _]:
 			%MainCharacter.acceleration *= 1.5
 		[3, _]:

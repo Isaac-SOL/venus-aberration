@@ -11,6 +11,7 @@ var speed := Vector2(0, 0)
 var rot_speed: float = 0
 
 static var static_pos: Vector2
+static var static_rot: float
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -34,8 +35,9 @@ func _process(delta):
 	position += speed * delta
 	rotation += rot_speed * delta
 	
-	# Save publicly-accessible position
+	# Save globally-accessible position and rotation
 	static_pos = position
+	static_rot = rotation
 	
 	# Audio
 	%EngineAudio.pitch_scale = lerpf(0.01, 1, speed.length() / 100)
@@ -47,3 +49,8 @@ func _on_area_entered(area):
 
 func add_speed(velocity: Vector2):
 	speed += velocity
+
+func play_beeps(duration: float):
+	%BeepAudio.play()
+	await get_tree().create_timer(duration).timeout
+	%BeepAudio.stop()

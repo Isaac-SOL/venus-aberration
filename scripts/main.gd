@@ -11,6 +11,7 @@ class_name Main extends Node
 @export var scrap_scan: PackedScene
 @export var gold_deposit: PackedScene
 @export var shade: PackedScene
+@export var danger: PackedScene
 
 var drone_out: bool = false
 var can_send_or_stop_sample: bool = true
@@ -28,13 +29,19 @@ var hint_queue: Array[Tween] = []
 var hint_explore_extract_given: bool = false
 var hint_sampling_given: bool = false
 var hint_gold_given: bool = false
+var player_hp: int = 10
+var lost_hp: bool = false
 
 const MENU_CLOSE :=           "[color=lightgreen][zero][color=green] - Close menu & upgrades"
 const MENU_OPEN :=            "[color=lightgreen][zero][color=green] - Open menu & upgrades"
 const MENU_OPEN_ATTENTION :=  "[color=lightgreen][zero][color=yellow] - Open menu & upgrades"
+const MISSION_END_SUCCESS := "[center][color=lightgreen][font_size=72]end of mission\n[color=green][font_size=48]after running out of fuel, you left the planet\nand brought back home a total of\n[color=yellow][font_size=72] "
+const MISSION_END_FAILURE := "[center][color=lightgreen][font_size=72]end of mission\n[color=green][font_size=48]after an encounter with several\nunknown entities, you lost your life as well as\n[color=red][font_size=72] "
+const MENU_PAUSED := "[center][color=green][font_size=72]PAUSED"
 
 const RADAR_AUDIO_INCREASE := "[center][color=lightgreen][9] [color=green]increase\nradar audio\nfeedback"
 const RADAR_AUDIO_DECREASE := "[center][color=lightgreen][9] [color=green]decrease\nradar audio\nfeedback"
+const HEAL_MENU := "[center][color=lightgreen][8] [color=yellow]heal one\nhull point\n[color=lightgreen]{200 Bi}"
 
 const DRONE_SAMPLING_MENU :=      "[color=lightgreen]E[color=green] - Drop sampling drone [color=lightgreen]{20 Bi}"
 const DRONE_SAMPLING_DROPPING :=  "Dropping sampling drone..."
@@ -51,7 +58,7 @@ const DRONE_EXTRACTION_DROPPING :=     "Dropping extraction drone..."
 const DRONE_EXTRACTION_LANDED :=       "Drone landed, detecting nearby suitable deposits..."
 const DRONE_EXTRACTION_FOUND :=        "Found deposit, moving..."
 const DRONE_EXTRACTION_NOT_FOUND :=    "No deposits found, self-destructing..."
-const DRONE_EXTRACTION_NOT_FOUND_2 :=  "No more deposits found, awaiting collection by aircraft"
+const DRONE_EXTRACTION_NOT_FOUND_2 :=  "No more deposits found, awaiting aircraft"
 const DRONE_EXTRACTION_EXTRACTING :=   "Deposit reached, extracting..."
 const DRONE_EXTRACTION_SEARCHING :=    "Deposit extracted, looking for new deposits..."
 const DRONE_EXTRACTION_CANT_DROP :=    "Cannot drop extraction drone: no room"
@@ -87,15 +94,26 @@ func spawn_leading_gold():
 		%Ground.add_child(new_deposit)
 
 func spawn_leading_shade():
-	await seconds(0)
+	await seconds(150)
 	while true:
-		await seconds(30)
+		await seconds(200)
 		print("spawned shade")
 		if Structure.global_level >= 2:
 			break
 		var new_shade: Node2D = shade.instantiate()
 		new_shade.global_position = PlayerCharacter.static_pos + Vector2(680, 400)
 		%Ground.add_child(new_shade)
+
+func spawn_danger():
+	var next_time: float = 250
+	while true:
+		await seconds(next_time)
+		print("spawned danger")
+		var new_danger: Node2D = danger.instantiate()
+		var norm_pos := Vector2.from_angle(randf_range(0, 2 * PI)) * 700
+		new_danger.global_position = PlayerCharacter.static_pos + norm_pos
+		%Ground.add_child(new_danger)
+		next_time *= 0.9
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -119,6 +137,14 @@ func _process(_delta):
 						queue_hint(HINT_RADAR_DRONES)
 					open_upgrade_menu(false)
 					%UpgradeAudio.play()
+				elif i == 7 and player_hp < 10 and bismuthine >= 200:
+					bismuthine -= 200
+					update_counts()
+					player_hp += 1
+					%HPBoxContainer.set_hp(player_hp if player_hp > 0 else 0)
+					screen_shake(1, 0.5)
+					open_upgrade_menu(false)
+					%UpgradeAudio.play()
 				elif i == 8 and %RadarUI.is_active():
 					%RadarUI.toggle_audio()
 					%UIAudio.play()
@@ -128,6 +154,15 @@ func _process(_delta):
 		if Input.is_action_just_pressed("debug_bismuthine"):
 			bismuthine += 100
 			update_counts()
+
+func pause():
+	get_tree().paused = not get_tree().paused
+	if get_tree().paused:
+		show_message_slow(%EndLabel, MENU_PAUSED, 0.01)
+	else:
+		await seconds(0.1)
+		%EndLabel.text = ""
+		
 
 func hint_player():
 	if hint_queue.size() > 0:
@@ -201,8 +236,11 @@ func open_upgrade_menu(open: bool):
 		can_open_menu = false
 		for i in range(%UpgradeFlowContainer.get_child_count()):
 			%UpgradeFlowContainer.get_child(i).text = ""
-			var audio_message: String = RADAR_AUDIO_INCREASE if %RadarUI.is_lower() else RADAR_AUDIO_DECREASE
-			var message: String = %UpgradeSystem.get_upgrade_text(i) if i < 8 else audio_message if %RadarUI.is_active() else ""
+			var message: String
+			if i < 7: message = %UpgradeSystem.get_upgrade_text(i)
+			elif i == 7 and player_hp < 10: message = HEAL_MENU
+			elif i == 8 and %RadarUI.is_active(): message = RADAR_AUDIO_INCREASE if %RadarUI.is_lower() else RADAR_AUDIO_DECREASE
+			else: message = ""
 			show_message_slow_later(0.1, 0.5, %UpgradeFlowContainer.get_child(i), message, 0.02, "")
 		await seconds(2.5)
 		can_open_menu = true
@@ -264,6 +302,37 @@ func show_message_slow_later(t1: float, t2: float, label: RichTextLabel, message
 func reset_sampling_message():
 	show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
 
+func damage_player_light(explosion_source: Vector2, max_distance: float = 300):
+	var char_vector: Vector2 = %MainCharacter.global_position - explosion_source
+	if char_vector.length() < max_distance:
+		%MainCharacter.add_speed(char_vector.normalized() * 500)
+	screen_shake(2, 1.5)
+	%ExplosionAudio.play()
+
+func damage_player_big(explosion_source: Vector2, damage_amount: int, max_distance: float = 500):
+	var char_vector: Vector2 = %MainCharacter.global_position - explosion_source
+	if char_vector.length() < max_distance:
+		%MainCharacter.add_speed(char_vector.normalized() * 1000)
+		player_hp -= damage_amount
+		%HPBoxContainer.set_hp(player_hp if player_hp > 0 else 0)
+		%HPBoxContainer.blink_danger(6)
+		%MainCharacter.play_beeps(2)
+	screen_shake(3, 2)
+	%ExplosionAudioBig.play()
+	if player_hp <= 0:
+		end_mission(false)
+	elif not lost_hp:
+		lost_hp = true
+		spawn_danger()
+
+func end_mission(success: bool):
+	if not success:
+		%MainCharacter.visible = false
+	var message: String = MISSION_END_SUCCESS if success else MISSION_END_FAILURE
+	message += str(gold) + " Au"
+	get_tree().paused = true
+	show_message_slow(%EndLabel, message, 0.1, "")
+
 func show_deposit_info(deposit: Deposit):
 	var text_base: String = "Sample Composition:\n"
 	var comp = deposit.get_composition_percentage()
@@ -285,10 +354,36 @@ func sampling_routine(drone: SamplingDrone):
 	await seconds(4)
 	show_message_slow(%LabelSampling, DRONE_SAMPLING_SEARCHING, 0.01)
 	
-	if(drone.is_on_structure_causing_extinction() or drone.is_on_structure_causing_destruction()):
+	if drone.is_on_structure_causing_extinction():
 		await seconds(3)
 		drone.destroy_slow()
 		await seconds(7)
+		drone_out = false
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_LOST, 0.03, "red")
+		await seconds(7)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
+		can_send_or_stop_sample = true
+		return
+	
+	if drone.is_on_structure_causing_destruction():
+		await seconds(3)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_FOUND, 0.05)
+		await seconds(4)
+		damage_player_light(drone.global_position)
+		drone.destroy_immediate()
+		drone_out = false
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_LOST, 0.03, "red")
+		await seconds(7)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
+		can_send_or_stop_sample = true
+		return
+		
+	if drone.is_on_structure_causing_big_destruction():
+		await seconds(3)
+		show_message_slow(%LabelSampling, DRONE_SAMPLING_FOUND, 0.05)
+		await seconds(4)
+		damage_player_big(drone.global_position, 2)
+		drone.destroy_immediate()
 		drone_out = false
 		show_message_slow(%LabelSampling, DRONE_SAMPLING_LOST, 0.03, "red")
 		await seconds(7)
@@ -332,7 +427,7 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 	await seconds(4)
 	show_message_slow(label, id_head + DRONE_EXTRACTION_LANDED, 0.05)
 	
-	if(drone.is_on_structure_causing_extinction()):
+	if drone.is_on_structure_causing_extinction():
 		await seconds(3)
 		drone.destroy_slow()
 		await seconds(7)
@@ -347,7 +442,8 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 		show_message_slow(label, id_head + DRONE_EXTRACTION_FOUND, 0.01)
 		drone.move_toward_deposit(deposit)
 		await drone.finished_moving
-		show_message_slow(label, id_head + DRONE_EXTRACTION_EXTRACTING, 0.01)
+		var eta_secs: String = "\n(ETA " + drone.get_eta_string(deposit) + ")"
+		show_message_slow(label, id_head + DRONE_EXTRACTION_EXTRACTING + eta_secs, 0.01)
 		drone.set_drilling_audio(true)
 		drone.extract_deposit(deposit)
 		if not hint_explore_extract_given:
@@ -355,13 +451,18 @@ func extraction_routine(drone: ExtractionDrone, label: RichTextLabel):
 			hint_explore_extract_given = true
 			%UpgradeSystem.allow_extraction_upgrades = true
 		
-		if(drone.is_on_structure_causing_destruction()):
+		if drone.is_on_structure_causing_destruction():
 			await seconds(3)
-			var char_vector: Vector2 = %MainCharacter.global_position - drone.global_position
-			if char_vector.length() < 300:
-				%MainCharacter.add_speed(char_vector.normalized() * 500)
-			screen_shake(2, 1.5)
-			%ExplosionAudio.play()
+			damage_player_light(drone.global_position)
+			drone.destroy_immediate()
+			show_message_slow(label, id_head + DRONE_EXTRACTION_LOST, 0.03, "red")
+			await seconds(7)
+			label.queue_free()
+			return
+		
+		if drone.is_on_structure_causing_big_destruction():
+			await seconds(3)
+			damage_player_big(drone.global_position, 2)
 			drone.destroy_immediate()
 			show_message_slow(label, id_head + DRONE_EXTRACTION_LOST, 0.03, "red")
 			await seconds(7)
@@ -456,8 +557,7 @@ func _on_timer_bismuthine_timeout():
 	bismuthine -= 1
 	update_counts()
 	if bismuthine <= 0:
-		# Game Over
-		pass
+		end_mission(true)
 
 
 func _on_main_character_collected_scrap(value):

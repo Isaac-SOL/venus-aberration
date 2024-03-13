@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://dnh547nv0x8ig"]
+[gd_scene load_steps=8 format=3 uid="uid://dnh547nv0x8ig"]
 
 [ext_resource type="Script" path="res://scripts/danger.gd" id="1_xiq1m"]
 [ext_resource type="Texture2D" uid="uid://bmhhepxis2gln" path="res://assets/sprites/scrap_blurry.png" id="2_6b56y"]
 [ext_resource type="Script" path="res://scripts/scannable.gd" id="2_sofob"]
 [ext_resource type="Texture2D" uid="uid://dwkqa3muabl43" path="res://assets/sprites/dot.png" id="4_bp1lm"]
+[ext_resource type="AudioStream" uid="uid://tct8s7lvite" path="res://assets/audio/262604__erictuten__wind-through-a-pipe_edited.ogg" id="5_10ygi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sgv1b"]
 radius = 35.0143
@@ -18,7 +19,6 @@ script = ExtResource("1_xiq1m")
 killer = true
 dist_per_sec = 10.0
 cause_extinction = false
-sleeping = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-4, 2)
@@ -28,7 +28,6 @@ shape = SubResource("CircleShape2D_sgv1b")
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("2_sofob")
-scan_color = Color(1, 0, 0, 1)
 pitch_type = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Scannable"]
@@ -49,6 +48,15 @@ texture = ExtResource("4_bp1lm")
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 rect = Rect2(-50, -50, 100, 100)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+unique_name_in_owner = true
+stream = ExtResource("5_10ygi")
+volume_db = 6.0
+autoplay = true
+max_distance = 500.0
+panning_strength = 2.0
+bus = &"World"
 
 [node name="FlyTimer" type="Timer" parent="."]
 unique_name_in_owner = true

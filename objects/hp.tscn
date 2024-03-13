@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtbcty7n7y7qk"]
+
+[ext_resource type="Texture2D" uid="uid://dygj2bf3e85w7" path="res://assets/sprites/HP.png" id="1_ej5d2"]
+
+[node name="HP" type="TextureRect"]
+custom_minimum_size = Vector2(70, 16)
+texture = ExtResource("1_ej5d2")

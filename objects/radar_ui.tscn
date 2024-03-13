@@ -1,13 +1,15 @@
-[gd_scene load_steps=15 format=3 uid="uid://b0q64717o78vr"]
+[gd_scene load_steps=17 format=3 uid="uid://b0q64717o78vr"]
 
 [ext_resource type="Script" path="res://scripts/radar_ui.gd" id="1_ads4h"]
 [ext_resource type="PackedScene" uid="uid://d0slcoxfu6yre" path="res://objects/radar_point.tscn" id="2_u11iu"]
 [ext_resource type="Texture2D" uid="uid://g5v2sa8oylj5" path="res://assets/sprites/radar_lines_shadow.png" id="3_aikvo"]
+[ext_resource type="PackedScene" uid="uid://dyjuimqi1iild" path="res://objects/radar_point_noisy.tscn" id="3_eikql"]
 [ext_resource type="AudioStream" uid="uid://y2pkapecwqww" path="res://assets/audio/kenney/tone1.ogg" id="3_y2j2b"]
 [ext_resource type="Texture2D" uid="uid://dbjaugj8gshtk" path="res://assets/sprites/radar_lines_2_shadow.png" id="4_7mmw1"]
 [ext_resource type="Texture2D" uid="uid://cineqpg28pqj8" path="res://assets/sprites/radar_lines_3_shadow.png" id="5_yq742"]
 [ext_resource type="Theme" uid="uid://dn26n18gtuhyd" path="res://assets/fonts/main_text_theme.tres" id="6_tmg7t"]
 [ext_resource type="AudioStream" uid="uid://bfiuqg2fxda2x" path="res://assets/audio/kenney/tone1_short.ogg" id="7_jtcg2"]
+[ext_resource type="Texture2D" uid="uid://dwpbkumny271g" path="res://assets/sprites/radar_direction_arrow.png" id="8_7f3y4"]
 
 [sub_resource type="Curve" id="Curve_ydw5i"]
 max_value = 2.0
@@ -44,6 +46,7 @@ stream_0/weight = 1.0
 layer = 2
 script = ExtResource("1_ads4h")
 point_scene = ExtResource("2_u11iu")
+noisy_point_scene = ExtResource("3_eikql")
 radar_sprites = Array[Texture2D]([ExtResource("3_aikvo"), ExtResource("4_7mmw1"), ExtResource("5_yq742")])
 
 [node name="Label" type="Label" parent="."]
@@ -60,6 +63,19 @@ unique_name_in_owner = true
 position = Vector2(164, 556)
 scale = Vector2(2, 2)
 texture = ExtResource("3_aikvo")
+
+[node name="DirectionArrowShadow" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+modulate = Color(0, 0, 0, 0.196078)
+position = Vector2(166, 558)
+scale = Vector2(2, 2)
+texture = ExtResource("8_7f3y4")
+
+[node name="DirectionArrow" type="Sprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(164, 556)
+scale = Vector2(2, 2)
+texture = ExtResource("8_7f3y4")
 
 [node name="RadarCenter" type="Node2D" parent="."]
 unique_name_in_owner = true

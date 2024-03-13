@@ -6,6 +6,7 @@ extends DroneKiller
 @export var distance_max_speed: float = 50
 @export var rad_per_sec: float = 0.2
 @export var dist_per_sec: float = 15
+@export var max_audio_pitch_scale: float = 1
 
 var noticed: bool = false
 var move_away: bool = false
@@ -40,7 +41,8 @@ func _process(delta):
 			if killer and dist < target_distance:
 				target_distance = dist
 		else:
-			target_distance += 8 * dist_per_sec * delta
+			dist_per_sec *= 1.05
+			target_distance += 4 * dist_per_sec * delta
 		
 		# Transform to planar coordinates
 		var target_vec := Vector2.from_angle(target_radial) * target_distance
@@ -54,6 +56,8 @@ func _process(delta):
 		global_position += eff_move_vec
 		rotation = (PlayerCharacter.static_pos - global_position).angle()
 		
+		# Audio
+		%AudioStreamPlayer2D.pitch_scale = (((move_speed / max_speed) / 2) + 0.5) * max_audio_pitch_scale
 
 func _on_visible_on_screen_notifier_2d_screen_entered():
 	if not noticed:
@@ -66,6 +70,11 @@ func _on_visible_on_screen_notifier_2d_screen_entered():
 func _on_visible_on_screen_notifier_2d_screen_exited():
 	if noticed:
 		await get_tree().create_timer(5).timeout
+		var alpha: float = 1
+		while alpha > 0:
+			modulate = Color(1, 1, 1, alpha)
+			alpha -= 0.01
+			await get_tree().process_frame
 		queue_free()
 
 
@@ -77,5 +86,5 @@ func _on_fly_timer_timeout():
 
 func _on_area_entered(area):
 	if killer and area is PlayerCharacter:
-		# Damage player
-		pass
+		$/root/Main.damage_player_big(global_position, 2)
+		queue_free()

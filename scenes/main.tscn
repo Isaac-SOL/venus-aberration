@@ -1,4 +1,4 @@
-[gd_scene load_steps=44 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=50 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -12,6 +12,7 @@
 [ext_resource type="Shader" uid="uid://d3ee5lmk6vklk" path="res://shaders/cloud_shader.tres" id="6_aipgl"]
 [ext_resource type="PackedScene" uid="uid://dhgb7mbmjfko2" path="res://objects/shade.tscn" id="7_sh3fm"]
 [ext_resource type="AudioStream" uid="uid://g6s7okmplv6n" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180.ogg" id="8_7cydg"]
+[ext_resource type="PackedScene" uid="uid://dnh547nv0x8ig" path="res://objects/danger.tscn" id="8_qs76v"]
 [ext_resource type="AudioStream" uid="uid://5mr6tmlnmm4a" path="res://assets/audio/706994__nolit47__industrial_rusty_drums_loop180_short.ogg" id="8_roxjh"]
 [ext_resource type="Shader" uid="uid://cgj41v1cki3pc" path="res://shaders/cloud_shader_2.tres" id="10_cx3xn"]
 [ext_resource type="AudioStream" uid="uid://cb74puv8mlwu8" path="res://assets/audio/kenney/back_001_edited.ogg" id="10_ju6lk"]
@@ -23,6 +24,7 @@
 [ext_resource type="Shader" uid="uid://hk7eofwijlb2" path="res://shaders/crt_shader.tres" id="13_s3xhu"]
 [ext_resource type="AudioStream" uid="uid://boactc2pwxp56" path="res://assets/audio/414452__klankbeeld__strange-radio-signal-edited.ogg" id="14_syjp0"]
 [ext_resource type="Texture2D" uid="uid://ce77h8mgw6vwe" path="res://shaders/clouds_big.tres" id="14_vfjxm"]
+[ext_resource type="AudioStream" uid="uid://b3d5ywrp4wmau" path="res://assets/audio/kenney/explosionCrunch_001.ogg" id="15_bd3rl"]
 [ext_resource type="Texture2D" uid="uid://py7sb73x1loj" path="res://shaders/clouds_small.tres" id="15_uryqc"]
 [ext_resource type="Script" path="res://scripts/scrap_generator.gd" id="16_icr88"]
 [ext_resource type="PackedScene" uid="uid://c8dw6h147t7hg" path="res://objects/scrap.tscn" id="17_3p33g"]
@@ -34,13 +36,31 @@
 [ext_resource type="Script" path="res://scripts/shake_ui.gd" id="26_8b4na"]
 [ext_resource type="Texture2D" uid="uid://dtociutwjxbhl" path="res://assets/sprites/battery.png" id="26_hdkr1"]
 [ext_resource type="Texture2D" uid="uid://dygj2bf3e85w7" path="res://assets/sprites/HP.png" id="27_uneah"]
+[ext_resource type="Script" path="res://scripts/hp_box_container.gd" id="31_pqhrc"]
 [ext_resource type="Texture2D" uid="uid://b2yt7eqv0n8c6" path="res://assets/sprites/UI.png" id="31_q8a7k"]
+[ext_resource type="PackedScene" uid="uid://dtbcty7n7y7qk" path="res://objects/hp.tscn" id="33_2dfqc"]
+
+[sub_resource type="GDScript" id="GDScript_xt3mk"]
+script/source = "extends Node
+
+func _input(event):
+	if event.is_action_pressed(\"pause\"):
+		$/root/Main.pause()
+		%UIAudio.play()
+"
 
 [sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ajicu"]
 streams_count = 1
 random_pitch = 1.2
 random_volume_offset_db = 2.0
 stream_0/stream = ExtResource("13_dgita")
+stream_0/weight = 1.0
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_r4lcl"]
+streams_count = 1
+random_pitch = 1.2
+random_volume_offset_db = 2.0
+stream_0/stream = ExtResource("15_bd3rl")
 stream_0/weight = 1.0
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ko13q"]
@@ -106,10 +126,15 @@ status_label = ExtResource("4_cyim7")
 scrap_scan = ExtResource("18_8uqgm")
 gold_deposit = ExtResource("19_u2gof")
 shade = ExtResource("7_sh3fm")
+danger = ExtResource("8_qs76v")
 
 [node name="UpgradeSystem" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("6_2a65r")
+
+[node name="PauseManager" type="Node" parent="."]
+process_mode = 3
+script = SubResource("GDScript_xt3mk")
 
 [node name="BGLoop" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_syjp0")
@@ -130,6 +155,7 @@ bus = &"World"
 
 [node name="UIAudio" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+process_mode = 3
 stream = ExtResource("10_ju6lk")
 volume_db = -9.0
 bus = &"UI"
@@ -142,7 +168,14 @@ bus = &"UI"
 
 [node name="ExplosionAudio" type="AudioStreamPlayer" parent="."]
 unique_name_in_owner = true
+process_mode = 3
 stream = SubResource("AudioStreamRandomizer_ajicu")
+bus = &"World"
+
+[node name="ExplosionAudioBig" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = SubResource("AudioStreamRandomizer_r4lcl")
 bus = &"World"
 
 [node name="TimerBismuthine" type="Timer" parent="."]
@@ -182,7 +215,7 @@ follow_viewport_enabled = true
 
 [node name="ScreenShakeCamera" type="Camera2D" parent="Above" node_paths=PackedStringArray("target_node") groups=["MainCamera"]]
 unique_name_in_owner = true
-position = Vector2(642, 404)
+position = Vector2(3663, 1014)
 position_smoothing_enabled = true
 position_smoothing_speed = 3.0
 script = ExtResource("2_u5apd")
@@ -192,7 +225,7 @@ shake_factor = 50.0
 [node name="MainCharacter" parent="Above" groups=["MainCharacter"] instance=ExtResource("1_fk25x")]
 unique_name_in_owner = true
 z_index = 10
-position = Vector2(642, 404)
+position = Vector2(3663, 1014)
 rotation = 2.26544
 collision_mask = 3
 
@@ -203,6 +236,7 @@ target = NodePath("../MainCharacter")
 rot_speed = 1.047
 
 [node name="ScrapGeneratorPath" type="Path2D" parent="Above"]
+position = Vector2(3021, 610)
 curve = SubResource("Curve2D_iotw0")
 script = SubResource("GDScript_7tx5j")
 
@@ -241,6 +275,7 @@ unique_name_in_owner = true
 layer = 15
 visible = false
 world_radar = NodePath("../Above/Radar")
+arrow_target = Vector2(3650, 4500)
 
 [node name="MainUI" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
@@ -499,8 +534,14 @@ offset_bottom = 713.0
 
 [node name="HPBoxContainer" type="HBoxContainer" parent="MainUI/HPContainer"]
 unique_name_in_owner = true
+modulate = Color(0, 0.760784, 0, 1)
 layout_mode = 2
 theme_override_constants/separation = 0
+script = ExtResource("31_pqhrc")
+hp_scene = ExtResource("33_2dfqc")
+base_modulate = Color(0, 0.760784, 0, 1)
+damaged_modulate = Color(1, 0, 0, 1)
+damaged_modulate_2 = Color(0.254902, 0, 0, 1)
 
 [node name="HP" type="TextureRect" parent="MainUI/HPContainer/HPBoxContainer"]
 custom_minimum_size = Vector2(70, 16)
@@ -551,6 +592,28 @@ texture = ExtResource("27_uneah")
 custom_minimum_size = Vector2(70, 16)
 layout_mode = 2
 texture = ExtResource("27_uneah")
+
+[node name="EndLabel" type="RichTextLabel" parent="MainUI"]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme = ExtResource("12_dwlxs")
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_constants/shadow_outline_size = 1
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 0
 
 [node name="UIBorders" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
