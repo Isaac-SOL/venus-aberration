@@ -1,4 +1,4 @@
-[gd_scene load_steps=53 format=3 uid="uid://pudfht3ulxcw"]
+[gd_scene load_steps=58 format=3 uid="uid://pudfht3ulxcw"]
 
 [ext_resource type="PackedScene" uid="uid://crxubcsmyb2mt" path="res://objects/character.tscn" id="1_fk25x"]
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_jec0e"]
@@ -42,6 +42,8 @@
 [ext_resource type="Script" path="res://scripts/hp_box_container.gd" id="31_pqhrc"]
 [ext_resource type="Texture2D" uid="uid://b2yt7eqv0n8c6" path="res://assets/sprites/UI.png" id="31_q8a7k"]
 [ext_resource type="PackedScene" uid="uid://dtbcty7n7y7qk" path="res://objects/hp.tscn" id="33_2dfqc"]
+[ext_resource type="Shader" uid="uid://cjt2kf61626vh" path="res://shaders/hide_grey.tres" id="36_inrwr"]
+[ext_resource type="PackedScene" uid="uid://bk6tpannk0i7e" path="res://scenes/core_sample_scene.tscn" id="43_k5mi5"]
 
 [sub_resource type="GDScript" id="GDScript_xt3mk"]
 script/source = "extends Node
@@ -114,9 +116,18 @@ animations = [{
 "speed": 2.0
 }]
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jcv0c"]
+shader = ExtResource("36_inrwr")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_1l8kq"]
+viewport_path = NodePath("CoreSample/Node2D/SubViewport2")
+
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_ibbbg"]
 shader = ExtResource("13_s3xhu")
 shader_parameter/Noise = ExtResource("24_rp23n")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_j6smj"]
+viewport_path = NodePath("CoreSample/SubViewport")
 
 [node name="Main" type="Node"]
 script = ExtResource("1_jec0e")
@@ -426,7 +437,7 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -467.0
+offset_left = -422.0
 offset_top = -235.0
 offset_right = -48.0
 offset_bottom = 86.0
@@ -440,6 +451,12 @@ layout_mode = 2
 theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
 tab_size = 8
+
+[node name="CoreSample" type="Sprite2D" parent="MainUI"]
+material = SubResource("ShaderMaterial_jcv0c")
+position = Vector2(804, 112)
+scale = Vector2(2, 2)
+texture = SubResource("ViewportTexture_1l8kq")
 
 [node name="UpgradeContainer" type="MarginContainer" parent="MainUI"]
 unique_name_in_owner = true
@@ -651,9 +668,17 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="CoreSample" parent="." instance=ExtResource("43_k5mi5")]
+unique_name_in_owner = true
+
+[node name="Sprite2D" parent="CoreSample/Node2D/SubViewport2" index="0"]
+texture = SubResource("ViewportTexture_j6smj")
+
 [connection signal="timeout" from="TimerBismuthine" to="." method="_on_timer_bismuthine_timeout"]
 [connection signal="player_entered_area" from="Ground" to="." method="_on_ground_player_entered_area"]
 [connection signal="player_exited_area" from="Ground" to="." method="_on_ground_player_exited_area"]
 [connection signal="collected_scrap" from="Above/MainCharacter" to="." method="_on_main_character_collected_scrap"]
 [connection signal="collected_scrap" from="Above/MainCharacter" to="ScrapAudio" method="play" unbinds=1]
 [connection signal="timeout" from="Above/ScrapGeneratorPath/ScrapGenerator/GeneratorTimer" to="Above/ScrapGeneratorPath/ScrapGenerator" method="_on_generator_timer_timeout"]
+
+[editable path="CoreSample"]

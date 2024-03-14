@@ -301,6 +301,7 @@ func show_message_slow_later(t1: float, t2: float, label: RichTextLabel, message
 
 func reset_sampling_message():
 	show_message_slow(%LabelSampling, DRONE_SAMPLING_MENU, 0.01)
+	%CoreSample.clear()
 
 func damage_player_light(explosion_source: Vector2, max_distance: float = 300):
 	var char_vector: Vector2 = %MainCharacter.global_position - explosion_source
@@ -347,6 +348,8 @@ func show_deposit_info(deposit: Deposit):
 	elif amount < 600: text_base += "Avg Amount"
 	else: text_base += "High Amount"
 	show_message_slow(%LabelSampleResults, text_base, 0.01)
+	# Core sample visualization
+	%CoreSample.spawn_cylinders(deposit.get_composition())
 
 func sampling_routine(drone: SamplingDrone):
 	drone_out = true

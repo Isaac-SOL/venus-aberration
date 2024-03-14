@@ -1,0 +1,30 @@
+[gd_scene load_steps=7 format=3 uid="uid://bpocgmolr66bl"]
+
+[ext_resource type="Shader" uid="uid://ibwi4kto1ugf" path="res://shaders/test_core_sample.tres" id="1_dxo17"]
+[ext_resource type="ArrayMesh" uid="uid://bhohaqqq1ol5h" path="res://assets/models/cylinder_8.obj" id="2_20lue"]
+
+[sub_resource type="Gradient" id="Gradient_8uscu"]
+colors = PackedColorArray(0.58, 0.58, 0.58, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_qb1gy"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_nl031"]
+width = 128
+height = 128
+color_ramp = SubResource("Gradient_8uscu")
+noise = SubResource("FastNoiseLite_qb1gy")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1fygt"]
+render_priority = 0
+shader = ExtResource("1_dxo17")
+shader_parameter/Size = 1.0
+shader_parameter/Noise = SubResource("NoiseTexture2D_nl031")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CylinderGold" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("ShaderMaterial_1fygt")
+gi_mode = 0
+mesh = ExtResource("2_20lue")
+skeleton = NodePath("../../..")

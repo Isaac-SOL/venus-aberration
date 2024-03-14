@@ -1,0 +1,49 @@
+[gd_scene load_steps=12 format=3 uid="uid://bk6tpannk0i7e"]
+
+[ext_resource type="Script" path="res://scripts/core_sample_scene.gd" id="1_mk848"]
+[ext_resource type="PackedScene" uid="uid://bgepnx44whw44" path="res://objects/cylinder/cylinder_other.tscn" id="2_p0rn4"]
+[ext_resource type="PackedScene" uid="uid://brj5xdsplkmk1" path="res://objects/cylinder/cylinder_galena.tscn" id="3_k0era"]
+[ext_resource type="PackedScene" uid="uid://bqa42g84nrmvx" path="res://objects/cylinder/cylinder_iron.tscn" id="4_67hkm"]
+[ext_resource type="Shader" path="res://shaders/quantize.gdshader" id="4_fdyuo"]
+[ext_resource type="PackedScene" uid="uid://c51qnko7e17fw" path="res://objects/cylinder/cylinder_bismuthine.tscn" id="5_gx27h"]
+[ext_resource type="PackedScene" uid="uid://bpocgmolr66bl" path="res://objects/cylinder/cylinder_gold.tscn" id="6_xolv6"]
+[ext_resource type="PackedScene" uid="uid://fg12flsbyylf" path="res://objects/cylinder/cylinder_mystery.tscn" id="7_grj6c"]
+
+[sub_resource type="Environment" id="Environment_o2off"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ow6u1"]
+shader = ExtResource("4_fdyuo")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_cc2my"]
+viewport_path = NodePath("SubViewport")
+
+[node name="CoreSample" type="Node3D"]
+script = ExtResource("1_mk848")
+cynlinders = Array[PackedScene]([ExtResource("2_p0rn4"), ExtResource("3_k0era"), ExtResource("4_67hkm"), ExtResource("5_gx27h"), ExtResource("6_xolv6"), ExtResource("7_grj6c")])
+
+[node name="SubViewport" type="SubViewport" parent="."]
+gui_disable_input = true
+size = Vector2i(64, 256)
+
+[node name="Turntable" type="Node3D" parent="SubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0)
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 0.872206, 0.489139, 0, -0.489139, 0.872206, 0, 11.5998, 19.5957)
+environment = SubResource("Environment_o2off")
+fov = 37.8493
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport"]
+transform = Transform3D(0.295257, 0.705043, -0.644778, -0.293541, 0.709165, 0.64103, 0.909207, -1.58967e-08, 0.416344, -6.98996, 0, 0)
+
+[node name="Node2D" type="Node2D" parent="."]
+
+[node name="SubViewport2" type="SubViewport" parent="Node2D"]
+size = Vector2i(64, 256)
+
+[node name="Sprite2D" type="Sprite2D" parent="Node2D/SubViewport2"]
+material = SubResource("ShaderMaterial_ow6u1")
+texture = SubResource("ViewportTexture_cc2my")
+
+[node name="Camera2D" type="Camera2D" parent="Node2D/SubViewport2"]

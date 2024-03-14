@@ -1,0 +1,104 @@
+[gd_scene load_steps=13 format=3 uid="uid://c51qnko7e17fw"]
+
+[ext_resource type="ArrayMesh" uid="uid://nkysh33bv6c8" path="res://assets/models/cylinder.obj" id="1_8bhyt"]
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_j1k77"]
+parameter_name = "Noise"
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_ivohl"]
+source = 5
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_g5hfe"]
+parameter_name = "Size"
+default_value_enabled = true
+default_value = 1.0
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_fnjkd"]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_lsbrt"]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_bjsmr"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0, 0)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShader" id="VisualShader_cg0s1"]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform float Size = 1;
+uniform sampler2D Noise;
+
+
+
+void fragment() {
+// Input:6
+	vec2 n_out6p0 = UV;
+
+
+// FloatParameter:4
+	float n_out4p0 = Size;
+
+
+// VectorCompose:5
+	vec2 n_out5p0 = vec2(n_out4p0, n_out4p0);
+
+
+// VectorOp:7
+	vec2 n_out7p0 = n_out6p0 * n_out5p0;
+
+
+	vec4 n_out3p0;
+// Texture2D:3
+	n_out3p0 = texture(Noise, n_out7p0);
+
+
+// Output:0
+	ALBEDO = vec3(n_out3p0.xyz);
+
+
+}
+"
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture2DParameter_j1k77")
+nodes/fragment/2/position = Vector2(-620, 240)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture_ivohl")
+nodes/fragment/3/position = Vector2(-100, 200)
+nodes/fragment/4/node = SubResource("VisualShaderNodeFloatParameter_g5hfe")
+nodes/fragment/4/position = Vector2(-1080, 20)
+nodes/fragment/5/node = SubResource("VisualShaderNodeVectorCompose_fnjkd")
+nodes/fragment/5/position = Vector2(-800, 40)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_lsbrt")
+nodes/fragment/6/position = Vector2(-800, -80)
+nodes/fragment/7/node = SubResource("VisualShaderNodeVectorOp_bjsmr")
+nodes/fragment/7/position = Vector2(-420, 40)
+nodes/fragment/connections = PackedInt32Array(2, 0, 3, 2, 3, 0, 0, 0, 4, 0, 5, 0, 4, 0, 5, 1, 6, 0, 7, 0, 5, 0, 7, 1, 7, 0, 3, 0)
+
+[sub_resource type="Gradient" id="Gradient_n4mq3"]
+offsets = PackedFloat32Array(0, 0.308219, 0.729452, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.0342466, 0.0342466, 0.0342466, 1, 0.94747, 0.94747, 0.94747, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_6iqay"]
+frequency = 0.04
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_8w7ml"]
+width = 128
+height = 16
+color_ramp = SubResource("Gradient_n4mq3")
+noise = SubResource("FastNoiseLite_6iqay")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tv4pw"]
+render_priority = 0
+shader = SubResource("VisualShader_cg0s1")
+shader_parameter/Size = 1.0
+shader_parameter/Noise = SubResource("NoiseTexture2D_8w7ml")
+
+[node name="Node3D" type="Node3D"]
+
+[node name="CylinderBismuthine" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("ShaderMaterial_tv4pw")
+gi_mode = 0
+mesh = ExtResource("1_8bhyt")
+skeleton = NodePath("../../..")
