@@ -1,9 +1,19 @@
-[gd_scene load_steps=11 format=3 uid="uid://crxubcsmyb2mt"]
+[gd_scene load_steps=21 format=3 uid="uid://crxubcsmyb2mt"]
 
-[ext_resource type="Texture2D" uid="uid://brj780utw13on" path="res://assets/sprites/kenney/ship_0023.png" id="1_dyifn"]
 [ext_resource type="Script" path="res://scripts/character.gd" id="1_lfxkg"]
+[ext_resource type="Texture2D" uid="uid://1ep7yt367xpe" path="res://assets/sprites/kenney/ship-0a.png" id="2_2d64c"]
 [ext_resource type="AudioStream" uid="uid://c7ts4rxxvcoum" path="res://assets/audio/446120__justinvoke__engine-loop-4.ogg" id="3_m406k"]
+[ext_resource type="Texture2D" uid="uid://2l75key1m0l0" path="res://assets/sprites/kenney/ship-1a.png" id="3_o6swu"]
 [ext_resource type="AudioStream" uid="uid://bdjjlw72i6dux" path="res://assets/audio/kenney/tone1_looped.ogg" id="4_84pe2"]
+[ext_resource type="Texture2D" uid="uid://b55al5mkfg2gv" path="res://assets/sprites/kenney/ship-2a.png" id="4_335q0"]
+[ext_resource type="Texture2D" uid="uid://gsrvc26d5qlj" path="res://assets/sprites/kenney/ship-3a.png" id="5_envwp"]
+[ext_resource type="Texture2D" uid="uid://betrv2k6slmr4" path="res://assets/sprites/kenney/ship-4a.png" id="6_ken6e"]
+[ext_resource type="Texture2D" uid="uid://n8be8g640vfa" path="res://assets/sprites/kenney/ship-0b.png" id="7_ng0rf"]
+[ext_resource type="Texture2D" uid="uid://o78cchg2cs75" path="res://assets/sprites/kenney/ship-1b.png" id="8_t3num"]
+[ext_resource type="Texture2D" uid="uid://cn656femiuuf5" path="res://assets/sprites/kenney/ship-2b.png" id="9_bs2qm"]
+[ext_resource type="Texture2D" uid="uid://beid5v3esdm60" path="res://assets/sprites/kenney/ship-3b.png" id="10_cp8yv"]
+[ext_resource type="Texture2D" uid="uid://csbk76c1rc850" path="res://assets/sprites/kenney/ship-4b.png" id="11_nejuo"]
+[ext_resource type="AudioStream" uid="uid://tct8s7lvite" path="res://assets/audio/262604__erictuten__wind-through-a-pipe_edited.ogg" id="12_ggesn"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5cqbh"]
 radius = 16.0
@@ -55,11 +65,15 @@ acceleration = 75.0
 rot_acceleration = 5.0
 friction = 1.5
 rot_friction = 2.0
+sprites_no_engine = Array[Texture2D]([ExtResource("2_2d64c"), ExtResource("3_o6swu"), ExtResource("4_335q0"), ExtResource("5_envwp"), ExtResource("6_ken6e")])
+sprites_engine = Array[Texture2D]([ExtResource("7_ng0rf"), ExtResource("8_t3num"), ExtResource("9_bs2qm"), ExtResource("10_cp8yv"), ExtResource("11_nejuo")])
+audiostream_better_engine = ExtResource("12_ggesn")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+unique_name_in_owner = true
 z_index = 10
 scale = Vector2(2, 2)
-texture = ExtResource("1_dyifn")
+texture = ExtResource("2_2d64c")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 1)

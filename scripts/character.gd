@@ -6,6 +6,10 @@ signal collected_scrap(value: int)
 @export var rot_acceleration: float = 10
 @export var friction: float = 1
 @export var rot_friction: float = 1
+@export var sprites_no_engine: Array[Texture2D]
+@export var sprites_engine: Array[Texture2D]
+@export var audiostream_better_engine: AudioStream
+@export var better_engine_db: float = -5
 
 var speed := Vector2(0, 0)
 var rot_speed: float = 0
@@ -54,3 +58,11 @@ func play_beeps(duration: float):
 	%BeepAudio.play()
 	await get_tree().create_timer(duration).timeout
 	%BeepAudio.stop()
+
+func set_sprite(speed_level: int, engine_level: int):
+	%Sprite2D.texture = sprites_no_engine[speed_level] if engine_level == 0 else sprites_engine[speed_level]
+
+func update_engine():
+	%EngineAudio.stream = audiostream_better_engine
+	%EngineAudio.volume_db = better_engine_db
+	%EngineAudio.play()

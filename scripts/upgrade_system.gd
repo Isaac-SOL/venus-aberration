@@ -164,8 +164,13 @@ func perform_upgrade(pos: int):
 			%TimerBismuthine.wait_time *= 2
 			%BatterySprite.set_frame_and_progress(0, 0)
 			%BatterySprite.pause()
+			%MainCharacter.update_engine()
 		[4, _]:
 			$"..".extraction_factor = levels[pos] + 2
 		[5, _]:
 			$"..".galena_extraction = true
 	levels[pos] += 1
+	update_character_visuals()
+
+func update_character_visuals():
+	%MainCharacter.set_sprite(levels[2], levels[3])

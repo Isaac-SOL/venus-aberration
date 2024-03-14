@@ -25,6 +25,7 @@ func _on_generator_timer_timeout():
 	new_scan.follow_node = new_scrap
 	%WorldUI.add_child(new_scan)
 	$GeneratorTimer.start(randf_range(time.x, time.y) * (1.0 if $/root/Main.iron >= 50 else 0.3))
+	print($GeneratorTimer.wait_time)
 
 func pick_scrap_texture(new_scrap: Scrap):
 	if new_scrap.value < lerp(iron.x, iron.y, 0.33):
